@@ -26,6 +26,6 @@ module.exports = {
 
   }, defaults),
   production: Object.assign({
-
+    db: 'mongodb://appadmin:appadmin0328@ds143900.mlab.com:43900/heroku_dkh2tkbf'
   }, defaults)
 }[process.env.NODE_ENV || 'development'];
