@@ -14,7 +14,8 @@ const path = require('path');
 const defaults = {
   root: path.join(__dirname, '..'),
   secret: 'cdnetworks',
-  db: 'mongodb://localhost/notification'
+  db: 'mongodb://appadmin:appadmin0328@ds143900.mlab.com:43900/heroku_dkh2tkbf'
+  // db: 'mongodb://localhost/notification'
 };
 
 

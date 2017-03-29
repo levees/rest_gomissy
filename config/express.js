@@ -29,7 +29,7 @@ module.exports = function (app, passport) {
   app.set('secret', config.secret);
 
   app.use(cors({
-    origin: ['http://localhost:3000', 'https://reboil-demo.herokuapp.com'],
+    origin: ['http://localhost:3000', 'https://cdnet-push.herokuapp.com'],
     optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
     credentials: true
   }));
