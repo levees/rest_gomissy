@@ -43,6 +43,7 @@ exports.auth = function(req, res, next) {
 exports.session = function (req, res, next) {
   passport.authenticate('ldapauth', {session: false},
     function (err, userinfo, info) {
+      console.log(err);
       if (err) { return errorLogin(); } // will generate a 500 error
       
       // Generate a JSON response reflecting authentication status
@@ -91,6 +92,9 @@ var createUser = function(req, userinfo) {
 
 //var secret = 'cdnetworks'
 var createJWT = function(userinfo) {
+  // return jwt.sign(userinfo, config.secret, {
+  //   expiresIn: '7 days'
+  // });
   return jwt.sign(userinfo, config.secret);
 };
 
