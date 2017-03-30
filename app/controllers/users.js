@@ -59,10 +59,10 @@ exports.session = function (req, res, next) {
           user.authToken = createJWT(user.deviceToken);
           user.save();
         }
-        
+
         req.logIn(user, function(err) {
           if (err) { return errorLogin(); }
-          return res.send({success: true, userinfo: user, message: 'authentication succeeded'});
+          return res.send({ success: true, userinfo: user, message: 'authentication succeeded' });
         });
       });
 
@@ -91,9 +91,7 @@ var createUser = function(req, userinfo) {
 
 //var secret = 'cdnetworks'
 var createJWT = function(userinfo) {
-  return jwt.sign(userinfo, app.get('secret'), {
-    expiresIn: "7 days"
-  });
+  return jwt.sign(userinfo, config.secret);
 };
 
 var errorLogin = function() {
