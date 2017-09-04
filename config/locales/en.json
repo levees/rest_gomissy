@@ -1,0 +1,34 @@
+{
+	"pagetitle": "Page Title",
+	"sidebar": {
+		"home": "Home",
+		"tracking": {
+			"default": "Tracking",
+			"notice": "Notice",
+      "event": "Event",
+			"review": "Review"
+		}
+  },
+  "users": {
+    "username": "Username",
+    "password": "Password",
+    "name": "Name",
+    "email": "Email",
+    "mobile": "Phone Number",
+  
+    "signin": {
+      "title": "Login",
+      "button": "Login",
+      "signup": "Don't have an account? Register Now.",
+      "forgot": "Forgot Password?"
+    },
+    "signup": {
+      "title": "Register",
+      "button": "Submit",
+      "signin": "Already have an account? Login here!"
+    },
+    "forgot": {
+      "title": "Find Password"
+    }
+  }
+}

@@ -4,11 +4,64 @@
  * Module dependencies.
  */
 
-const config = require('../../config');
-const passport = require('passport');
-const jwt = require('jsonwebtoken');
+
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+const { wrap: async } = require('co');
 const User = mongoose.model('User');
+
+
+/**
+ * Load
+ */
+
+exports.load = async(function* (req, res, next, _id) {
+  const criteria = { _id };
+  try {
+    req.profile = yield User.load({ criteria });
+    if (!req.profile) return next(new Error('User not found'));
+  } catch (err) {
+    return next(err);
+  }
+  next();
+});
+
+/**
+ * Create user
+ */
+
+exports.create = async(function* (req, res) {
+  const user = new User(req.body);
+  user.provider = 'local';
+  try {
+    yield user.save();
+    req.logIn(user, err => {
+      if (err) req.flash('info', 'Sorry! We are not able to log you in!');
+      return res.redirect('/');
+    });
+  } catch (err) {
+    const errors = Object.keys(err.errors)
+      .map(field => err.errors[field].message);
+
+    res.render('users/signup', {
+      title: 'Sign up',
+      errors,
+      user
+    });
+  }
+});
+
+
+/**
+ * Show sign up form
+ */
+
+exports.signup = function (req, res) {
+  res.render('users/signup', {
+    title: 'Sign up',
+    user: new User()
+  });
+};
 
 
 
@@ -36,21 +89,26 @@ const User = mongoose.model('User');
 //   )(req, res, next);
 // }
 
-exports.auth = function(req, res, next) {
-
+exports.login = function(req, res, next) {
+  if (req.params.format == '.json')
+    res.json('{aaa:bbb}');
+  else
+    res.render('users/login'); 
 };
 
+
+
 exports.session = function (req, res, next) {
-  passport.authenticate('ldapauth', {session: false},
+  passport.authenticate('local', {session: false},
     function (err, userinfo, info) {
-      console.log(err);
-      if (err) { return errorLogin(); } // will generate a 500 error
+      // console.log(err);
+      if (err) { return errorLogin(req, res); } // will generate a 500 error
       
       // Generate a JSON response reflecting authentication status
-      if (!userinfo) { return errorLogin(); }
+      if (!userinfo) { return errorLogin(req, res); }
 
       User.findOne({ username: userinfo.name }, function (err, user) {
-        if (err) { return errorLogin(); }
+        if (err) { return errorLogin(req, res); }
 
         if (!user) {
           user = createUser(req, userinfo);
@@ -62,7 +120,7 @@ exports.session = function (req, res, next) {
         }
 
         req.logIn(user, function(err) {
-          if (err) { return errorLogin(); }
+          if (err) { return errorLogin(req, res); }
           return res.send({ success: true, userinfo: user, message: 'authentication succeeded' });
         });
       });
@@ -98,8 +156,11 @@ var createJWT = function(userinfo) {
   return jwt.sign(userinfo, config.secret);
 };
 
-var errorLogin = function() {
-  return res.send({ success: false, message: 'authentication failed' });
+var errorLogin = function(req, res) {
+  if (req.params.format == '.json')
+    res.json({ success: false, message: 'Login failed. Check your login/password.' });
+  else
+    res.render('users/login', { message: 'Login failed. Check your login/password.' }); 
 };
 
 /**

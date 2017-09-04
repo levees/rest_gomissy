@@ -1,0 +1,55 @@
+<% layout('/empty') -%>
+
+<div class="user-container">
+  <ul id="bg-slider">
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+  </ul>
+  <div class="user-wrap">
+    <form role="form" action="/users" method="post">
+      <input type="hidden" name="_csrf" value="<%= csrf_token %>" />
+      <div class="row">
+        <h4><%= i18n.__('users.signup.title') %></h4>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="username" type="text" class="validate" value="" required />
+          <label for="username"><%= i18n.__('users.username') %></label>
+        </div>
+
+        <div class="input-field col s12">
+          <input id="password" type="password" class="validate" value="" required />
+          <label for="password"><%= i18n.__('users.password') %></label>
+        </div>
+
+        <div class="input-field col s12">
+          <input id="email" type="email" class="validate" value="" required />
+          <label for="email" data-error="wrong" data-success="right" class=""><%= i18n.__('users.email') %></label>
+        </div>
+
+        <div class="input-field col s12">
+          <input id="name" type="text" required />
+          <label for="name"><%= i18n.__('users.name') %></label>
+        </div>
+
+        <div class="input-field col s12">
+          <input id="mobile" type="text">
+          <label for="mobile"><%= i18n.__('users.mobile') %></label>
+        </div>
+
+        <div class="input-field col s12">
+          <button class="btn waves-effect waves-light" type="submit" name="action">
+            <i class="material-icons right">send</i><%= i18n.__('users.signup.button') %>
+          </button>
+        </div>
+        <div class="input-field col s12">
+          <p class="margin center medium-small sign-up"><a href="/login"><%= i18n.__('users.signup.signin') %></a></p>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

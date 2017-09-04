@@ -1,0 +1,34 @@
+{
+  "pagetitle": "Page Title",
+  "sidebar": {
+    "home": "홈",
+    "tracking": {
+      "default": "산행",
+      "notice": "공지사항",
+      "event": "산행안내",
+      "review": "산행후기"
+    }
+  },
+  "users": {
+    "username": "유저 아이디",
+    "password": "비밀번호",
+    "name": "이름",
+    "email": "이메일",
+    "mobile": "전화번호",
+
+    "signin": {
+      "title":"로그인",
+      "button": "로그인",
+      "signup": "회원가입 하기",
+      "forgot": "비밀번호 찾기"
+    },
+    "signup": {
+      "title": "회원가입",
+      "button": "회원가입",
+      "signin": "로그인 하기"
+    },
+    "forgot": {
+      "title": "비밀번호 찾기"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+<div class="container">
+  <div class="row">
+    <div class="col s12 m12 l12">
+      <h5 class="breadcrumbs-title">Buttons</h5>
+      <ol class="breadcrumbs">
+        <!-- <% breadcrumbs.forEach(function (breadcrumb) { %>
+          <li><a href="<%= breadcrumb.url %>"><%= breadcrumb.name %></a></li>
+        <% }); %> -->
+        <% for(var i=1, cnt=breadcrumb.length; i <= cnt; i++) { %>
+          <% if (i == cnt) { %>
+            <li class="active"><a href="<%= breadcrumbs[i].url %>"><%= breadcrumbs[i].name %></a></li>
+          <% } else { %>
+            <li><a href="<%= breadcrumbs[i].url %>"><%= breadcrumbs[i].name %></a></li>
+          <% } %>
+        <% } %>
+        <li><a href="#">UI Elements</a>
+        </li>
+        <li class="active">Buttons</li>
+      </ol>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,36 @@
+<% layout('/empty') -%>
+
+<div class="user-container">
+  <ul id="bg-slider"><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+  <div class="user-wrap">
+    <form role="form" action="/session" method="post">
+      <input type="hidden" name="_csrf" value="<%= csrf_token %>" />
+      <div class="row">
+        <h4><%= i18n.__('users.signin.title') %></h4>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="username" type="text" class="validate">
+          <label for="username"><%= i18n.__("users.username") %></label>
+        </div>
+
+        <div class="input-field col s12">
+          <input id="password" type="password" class="validate" value="">
+          <label for="password"><%= i18n.__("users.password") %></label>
+        </div>
+
+        <div class="input-field col s12">
+          <button class="btn waves-effect waves-light" type="submit" name="action">
+            <i class="material-icons right">send</i><%= i18n.__('users.signin.button') %>
+          </button>
+        </div>
+        <div class="input-field col s12">
+          <p class="medium-small sign-up"><a href="/signup"><%= i18n.__('users.signin.signup') %></a></p>
+        </div>
+        <div class="col s12">
+          <p class="medium-small sign-up"><a href="/forgot"><%= i18n.__('users.signin.forgot') %></a></p>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 const jwt = require('jsonwebtoken');
-const config = require('./');
+const config = require('./config');
 
 
 exports.deviceToken = function(req, res, next) {
