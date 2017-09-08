@@ -8,6 +8,14 @@ const mongoose = require('mongoose');
 const crypto = require('crypto');
 const Schema = mongoose.Schema;
 
+const oAuthTypes = [
+  'github',
+  'twitter',
+  'facebook',
+  'google',
+  'linkedin'
+];
+
 /**
  * User Schema
  */
@@ -28,7 +36,8 @@ const UserSchema = new Schema({
   },
   name: { 
     type: String, 
-    default: '' 
+    default: '', 
+    required: true
   },
   email: { 
     type: String, 
@@ -81,11 +90,6 @@ UserSchema
 
 // the below 5 validations only apply if you are signing up traditionally
 
-UserSchema.path('name').validate(function (name) {
-  if (this.skipValidation()) return true;
-  return name.length;
-}, 'Name cannot be blank');
-
 UserSchema.path('email').validate(function (email) {
   if (this.skipValidation()) return true;
   return email.length;
@@ -113,6 +117,12 @@ UserSchema.path('hashed_password').validate(function (hashed_password) {
   return hashed_password.length && this._password.length;
 }, 'Password cannot be blank');
 
+UserSchema.path('name').validate(function (name) {
+  if (this.skipValidation()) return true;
+  return name.length;
+}, 'Name cannot be blank');
+
+
 
 /**
  * Pre-save hook
@@ -121,16 +131,15 @@ UserSchema.path('hashed_password').validate(function (hashed_password) {
 UserSchema.pre('save', function (next) {
   if (!this.isNew) return next();
 
-  // // get the current date
-  // var currentDate = new Date();
+  // get the current date
+  var currentDate = new Date();
 
-  // // change the updated_at field to current date
-  // this.updated_at = currentDate;
+  // change the updated_at field to current date
+  this.updated_at = currentDate;
 
-  // // if created_at doesn't exist, add to that field
-  // if (!this.created_at)
-  //   this.created_at = currentDate;
-  // next();
+  // if created_at doesn't exist, add to that field
+  if (!this.created_at)
+    this.created_at = currentDate;
   
   if (!validatePresenceOf(this.password) && !this.skipValidation()) {
     next(new Error('Invalid password'));
@@ -213,6 +222,7 @@ UserSchema.statics = {
 
   load: function (options, cb) {
     options.select = options.select || 'name username';
+
     return this.findOne(options.criteria)
       .select(options.select)
       .exec(cb);

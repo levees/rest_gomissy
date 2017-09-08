@@ -5,14 +5,17 @@
  */
 
 const config = require('../../config/config');
+const { respond, respondOrRedirect } = require('../../config/respond');
 const mongoose = require('mongoose');
 
 exports.index = function(req, res, next) {
-  req.breadcrumbs('test', '/test');
-  console.log(JSON.stringify(req.breadcrumbs));
-  res.render('home/index', {
+  // req.breadcrumbs('test', '/test');
+  // console.log(res.locals);
+  respond(res, 'home/index', {
+    pagetitle: 'Home',
     breadcrumbs: req.breadcrumbs()
-  }); 
+  });
+
 };
 
 exports.test = function(req, res, next) {

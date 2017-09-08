@@ -14,6 +14,10 @@ const auth  = require('./auth');
  */ 
 module.exports = function (app, passport) {
   const pauth = passport.authenticate.bind(passport);
+  app.use(function (req, res, next) {
+    res.locals.userinfo = req.user;
+    next();
+  });
 
   app.get('/', home.index);
   app.get('/test/:id/:sid:format(.json)?', home.test);
@@ -38,8 +42,22 @@ module.exports = function (app, passport) {
   //   failureFlash: 'Invalid email or password.'
   // }), users.session);
 
+  // app.post('/users/session',
+  //   pauth('local', {
+  //     failureRedirect: '/login',
+  //     failureFlash: 'Invalid email or password.'
+  //   }), users.session);
+
+
   // app.post('/auth', users.auth);
-  app.post('/session:format(.json)?', users.session);
+  app.post('/signup', users.create);
+  // app.post('/session:format(.json)?', users.session);
+  app.post('/login',
+    pauth('local', {
+      failureRedirect: '/login',
+      failureFlash: 'Invalid email or password.'
+    }), users.session);
+
   // app.post('/login', passport.authenticate('ldapauth', {session: false}), function(req, res) {
   //   console.log(req.user);
   //   res.send({status: 'ok'});

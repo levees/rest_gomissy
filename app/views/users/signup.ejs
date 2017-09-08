@@ -10,34 +10,34 @@
     <li></li>
   </ul>
   <div class="user-wrap">
-    <form role="form" action="/users" method="post">
+    <form role="form" action="/signup" method="post">
       <input type="hidden" name="_csrf" value="<%= csrf_token %>" />
       <div class="row">
         <h4><%= i18n.__('users.signup.title') %></h4>
       </div>
       <div class="row">
         <div class="input-field col s12">
-          <input id="username" type="text" class="validate" value="" required />
+          <input id="username" name="username" type="text" class="validate" value="" required />
           <label for="username"><%= i18n.__('users.username') %></label>
         </div>
 
         <div class="input-field col s12">
-          <input id="password" type="password" class="validate" value="" required />
+          <input id="password" name="password" type="password" class="validate" value="" required />
           <label for="password"><%= i18n.__('users.password') %></label>
         </div>
 
         <div class="input-field col s12">
-          <input id="email" type="email" class="validate" value="" required />
+          <input id="email" name="email" type="email" class="validate" value="" required />
           <label for="email" data-error="wrong" data-success="right" class=""><%= i18n.__('users.email') %></label>
         </div>
 
         <div class="input-field col s12">
-          <input id="name" type="text" required />
+          <input id="name" name="name" type="text" required />
           <label for="name"><%= i18n.__('users.name') %></label>
         </div>
 
         <div class="input-field col s12">
-          <input id="mobile" type="text">
+          <input id="mobile" name="mobile" type="text">
           <label for="mobile"><%= i18n.__('users.mobile') %></label>
         </div>
 

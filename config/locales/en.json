@@ -4,9 +4,9 @@
 		"home": "Home",
 		"tracking": {
 			"default": "Tracking",
-			"notice": "Notice",
-      "event": "Event",
-			"review": "Review"
+			"notice": "Notices",
+      "event": "Events",
+			"review": "Reviews"
 		}
   },
   "users": {

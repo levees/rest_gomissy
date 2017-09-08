@@ -3,19 +3,19 @@
 <div class="user-container">
   <ul id="bg-slider"><li></li><li></li><li></li><li></li><li></li><li></li></ul>
   <div class="user-wrap">
-    <form role="form" action="/session" method="post">
+    <form role="form" action="/login" method="post">
       <input type="hidden" name="_csrf" value="<%= csrf_token %>" />
       <div class="row">
         <h4><%= i18n.__('users.signin.title') %></h4>
       </div>
       <div class="row">
         <div class="input-field col s12">
-          <input id="username" type="text" class="validate">
+          <input id="username" name="username" type="text" class="validate">
           <label for="username"><%= i18n.__("users.username") %></label>
         </div>
 
         <div class="input-field col s12">
-          <input id="password" type="password" class="validate" value="">
+          <input id="password" name="password" type="password" class="validate" value="">
           <label for="password"><%= i18n.__("users.password") %></label>
         </div>
 
