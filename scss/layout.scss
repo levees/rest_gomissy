@@ -219,6 +219,8 @@ $animation_time: 8s;
   .container {
     width: 100%;
     padding: 10px 20px;
+
+    .row { margin-bottom: 0; }
   }
 
   .block-header {
@@ -238,10 +240,10 @@ $animation_time: 8s;
       margin-bottom: 30px; 
 
       h3 {
+        border-top: 0;
         border-bottom: 2px solid transparent;
-        // border-image: linear-gradient(to right, $font_color_link 0%, $font_color_link 25%, #ccc 25%, #ccc 100%);
         border-image: linear-gradient(to right, $font_color_link 0%, $font_color_link 150px, #ccc 150px, #ccc 100%);
-        border-image-slice: 1;
+        border-image-slice: 90% 1;
         margin-top: 10px;
         margin-bottom: 10px;
         padding-left: 5px;
@@ -301,7 +303,7 @@ $animation_time: 8s;
 
         li {
           width: 100%;
-          padding: 7px 10px;
+          padding: 8.5px 10px;
           border-bottom: 1px dotted #ccc;
           display: block;
 
@@ -310,6 +312,7 @@ $animation_time: 8s;
             display: inline-block;
             margin: 0;
             &.date { float: right; }
+            i { vertical-align: sub; margin-left: 10px; }
           }
         }
       }
@@ -327,8 +330,8 @@ $animation_time: 8s;
         transition: all;
         -webkit-transition-duration: .2s;
         transition-duration: .2s;
-        width: 100%;
-        border-radius: 2px;
+        width: calc(100% - 3px);
+        border-radius: 3px;
       }
 
     }
@@ -341,6 +344,9 @@ $animation_time: 8s;
   // height: 100px;
   // padding: 5px 5px 0 5px;
 
+  .row {
+    margin-bottom: 0;
+  }
 }
 
 .breadcrumbs {

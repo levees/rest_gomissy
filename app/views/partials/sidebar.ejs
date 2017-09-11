@@ -6,7 +6,12 @@
       </div>
 
       <div class="profile-info">
-        <%= (userinfo) ? userinfo.name : "Guest" %>
+        <% if (userinfo) { %>
+          <a href="/"><%= userinfo.name %></a>
+        <% } else { %>
+          <a href="/login"> Guest </a>
+        <% } %>
+        
         <!-- <i class="zmdi zmdi-caret-down"></i> -->
       </div>
     </a>

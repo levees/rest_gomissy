@@ -7,4 +7,9 @@ $(document).ready( function() {
   $('#header .menu-toggle').on('click', function() { 
     $('#sidebar').toggleClass('on');
   });
+
+  // Photo gallery
+  $('.photos').lightGallery({
+  	enableTouch: !0
+  })
 });
