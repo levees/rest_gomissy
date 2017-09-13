@@ -118,11 +118,12 @@ module.exports = function (app, passport) {
   }));
 
   // Cors
-  app.use(cors({
-    origin: ['http://localhost:3000', 'https://cdnet-push.herokuapp.com'],
-    optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-    credentials: true
-  }));
+  // app.use(cors({
+  //   origin: ['http://localhost:3000', 'https://cdnet-push.herokuapp.com'],
+  //   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+  //   credentials: true
+  // }));
+  
   app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header('Access-Control-Allow-Methods', 'POST, GET, UPDATE, DELETE, PUT');
@@ -147,11 +148,11 @@ module.exports = function (app, passport) {
   // app.use(helpers(pkg.name));
 
   if (env !== 'test') {
-    app.use(csrf());
+    // app.use(csrf());
 
     // This could be moved to view-helpers :-)
     app.use(function (req, res, next) {
-      res.locals.csrf_token = req.csrfToken();
+      // res.locals.csrf_token = req.csrfToken();
       next();
     });
   }

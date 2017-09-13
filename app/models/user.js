@@ -54,7 +54,7 @@ const UserSchema = new Schema({
     type: String, 
     default: '' 
   },
-  authToken: { 
+  access_token: { 
     type: String, 
     default: '' 
   },

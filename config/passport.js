@@ -56,7 +56,7 @@ module.exports = function (passport) {
       };
 
       User.findOne(options.criteria, function(err, user) {
-        console.log(user);
+        // console.log(user);
         if (err) return done(err);
         if (!user) {
           return done(null, false, { message: 'Unknown user' });
@@ -65,21 +65,11 @@ module.exports = function (passport) {
           return done(null, false, { message: 'Invalid password' });
         }
 
-        user.authToken = createJWT(user.username);
+        user.access_token = createJWT(user.username);
         user.save();
+
         return done(null, user);
       });
-
-      // User.load(options, function (err, user) {
-      //   if (err) return done(err);
-      //   if (!user) {
-      //     return done(null, false, { message: 'Unknown user' });
-      //   }
-      //   if (!user.authenticate(password)) {
-      //     return done(null, false, { message: 'Invalid password' });
-      //   }
-      //   return done(null, user);
-      // });
     }
   ));
 };

@@ -97,7 +97,7 @@ exports.session = function (req, res) {
     if (err) { 
       respond(res, 'login',{ success: false, message: 'Login failed. Check your login/password.' }); 
     }
-    respondOrRedirect ({req, res}, '/', { userinfo: user }, 'authentication succeeded');
+    respondOrRedirect ({req, res}, '/', user, 'authentication succeeded');
   });
 }
 
