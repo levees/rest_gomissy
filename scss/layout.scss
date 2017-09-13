@@ -217,10 +217,12 @@ $animation_time: 8s;
   transition-timing-function: ease;
 
   .container {
+    position: relative;
+    margin: 0;
     width: 100%;
     padding: 10px 20px;
 
-    .row { margin-bottom: 0; }
+    &.row { margin: 0; }
   }
 
   .block-header {
@@ -237,7 +239,7 @@ $animation_time: 8s;
     .row { } 
 
     section {
-      margin-bottom: 30px; 
+      // margin-bottom: 30px; 
 
       h3 {
         border-top: 0;
@@ -333,7 +335,9 @@ $animation_time: 8s;
         width: calc(100% - 3px);
         border-radius: 3px;
       }
-
+      .photos .lightbox-item>img {
+        height: 90px;
+      }
     }
   }
 }
