@@ -24,9 +24,10 @@ module.exports = function (app, passport) {
 
 
   // user routes
-  app.get('/login', users.login);
   app.get('/signup', users.signup);
-  // app.get('/logout', users.logout);
+  app.get('/login', users.login);
+  app.post('/logout', users.logout);
+  app.get('/auth', users.auth);
   // app.post('/users', users.create);
   // app.post('/users/session',
   //   pauth('local', {
@@ -51,7 +52,6 @@ module.exports = function (app, passport) {
 
   // app.post('/auth', users.auth);
   app.post('/signup', users.create);
-  // app.post('/session:format(.json)?', users.session);
   app.post('/login',
     pauth('local', {
       failureRedirect: '/login',

@@ -103,7 +103,43 @@ exports.session = function (req, res) {
 
 
 
+exports.auth = function(req, res, next) {
+  // verify the incoming JWT
 
+  try {
+    var incomingToken = jwt.verify(req.query.token, secret);
+  } catch (ex) {
+    console.error(ex.stack);
+    return res.status(401).send('jwt error');
+  }
+
+  // do whatever auth stuff you want with the users details
+
+  var email = incomingToken.data.email;
+  var password = incomingToken.data.password;
+  var user_id;
+
+  if(email == 'me@test.com' && password == 'password'){
+
+    // user authentication was successful, assign whatever data you want
+    user_id = '123';
+  }
+
+  // construct JWT and redirect to the redirect_uri
+
+  var outgoingToken = jwt.sign({"user_id": user_id}, secret);
+  var url = req.query.redirect_uri + 
+      '&token=' + encodeURIComponent(outgoingToken) +
+      '&state=' + encodeURIComponent(req.query.state);
+
+  return res.redirect(url);
+
+}
+
+exports.logout = function(req, res, next) {
+  var access_token = req.headers['x-auth-token'];
+  console.log(access_token);
+}
 
 
 
