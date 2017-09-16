@@ -3,11 +3,24 @@
 /*
  * Module dependencies.
  */
-const home  = require('../app/controllers/home');
-const users = require('../app/controllers/users');
-const auth  = require('./auth');
+const home      = require('../app/controllers/home');
+const users     = require('../app/controllers/users');
+const articles  = require('../app/controllers/articles');
+const comments  = require('../app/controllers/comments');
+const auth      = require('./auth');
+const menu      = require('./menu');
 
 
+/**
+ * Route middlewares
+ */
+const hasMenu = [menu.hasMenu];
+const articleAuth = [auth.requiresLogin, auth.article.hasAuthorization];
+const commentAuth = [auth.requiresLogin, auth.comment.hasAuthorization];
+
+const fail = {
+  failureRedirect: '/login'
+};
 
 /**
  * Expose routes
@@ -76,6 +89,20 @@ module.exports = function (app, passport) {
 
   //   next();
   // };
+
+
+  /**
+   * Articles Routes
+   */
+  app.param('id', articles.load);
+  app.get('/:menu',           hasMenu, articles.index);
+  app.get('/:menu/new',       hasMenu, auth.requiresLogin, articles.new);
+  app.post('/:menu',          hasMenu, auth.requiresLogin, articles.create);
+  app.get('/:menu/:id',       hasMenu, articles.show);
+  app.get('/:menu/:id/edit',  hasMenu, articleAuth, articles.edit);
+  app.put('/:menu/:id',       hasMenu, articleAuth, articles.update);
+  app.delete('/:menu/:id',    hasMenu, articleAuth, articles.destroy);
+
 
 
 };
