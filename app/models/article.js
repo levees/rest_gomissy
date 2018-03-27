@@ -22,52 +22,52 @@ const setTags = tags => tags.split(',');
  */
 
 const ArticleSchema = new Schema({
-  user: { 
-    type: Schema.ObjectId, 
-    ref: 'User' 
+  user: {
+    type: Schema.ObjectId,
+    ref: 'User'
   },
   menu: {
     type: Schema.ObjectId,
-    ref: 'Menu'
+    ref: 'Menu.sub_menu'
   },
-  title: { 
-    type: String, 
-    default: '', 
-    trim: true 
+  title: {
+    type: String,
+    default: '',
+    trim: true
   },
-  body: { 
-    type : String, 
-    default : '', 
-    trim : true 
+  body: {
+    type : String,
+    default : '',
+    trim : true
   },
   comments: [
     {
-      body: { 
-        type : String, 
-        default : '' 
+      body: {
+        type : String,
+        default : ''
       },
-      user: { 
-        type : Schema.ObjectId, 
-        ref : 'User' 
+      user: {
+        type : Schema.ObjectId,
+        ref : 'User'
       },
-      created_at: { 
-        type : Date, 
-        default : Date.now 
+      created_at: {
+        type : Date,
+        default : Date.now
       }
     }
   ],
-  tags: { 
-    type: [], 
-    get: getTags, 
-    set: setTags 
+  tags: {
+    type: [],
+    get: getTags,
+    set: setTags
   },
   image: {
     cdnUri: String,
     files: []
   },
-  created_at  : { 
-    type : Date, 
-    default : Date.now 
+  created_at  : {
+    type : Date,
+    default : Date.now
   }
 });
 

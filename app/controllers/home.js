@@ -19,12 +19,12 @@ exports.index = function(req, res, next) {
 };
 
 exports.test = function(req, res, next) {
-  console.log(req.params);
+  // console.log(req.params);
 
-  
+
 
   if (req.params.format == '.json')
     res.json('{aaa:bbb}');
   else
-    res.render('home/test'); 
+    res.render('home/test');
 };

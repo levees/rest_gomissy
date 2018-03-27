@@ -11,11 +11,11 @@
         <% } else { %>
           <a href="/login"> Guest </a>
         <% } %>
-        
+
         <!-- <i class="zmdi zmdi-caret-down"></i> -->
       </div>
     </a>
-    <!-- 
+    <!--
     <ul class="main-menu">
       <li>
           <a href="profile-about.html"><i class="zmdi zmdi-account"></i> View Profile</a>
@@ -29,18 +29,18 @@
       <li>
           <a href=""><i class="zmdi zmdi-time-restore"></i> Logout</a>
       </li>
-    </ul> 
+    </ul>
     -->
   </li>
   <li class="bold"><a href="/" class="waves-effect waves-teal"><i class="material-icons">home</i> <%= i18n.__('sidebar.home') %></a></li>
   <li class="no-padding">
     <ul class="collapsible collapsible-accordion">
-      <li class="bold"><a class="collapsible-header waves-effect waves-teal"><i class="material-icons">landscape</i> <%= i18n.__('sidebar.tracking.default') %></a>
+      <li class="bold"><a class="collapsible-header waves-effect waves-teal <%= (menu.parent.path == 'board') ? 'active' : '' %>"><i class="material-icons">landscape</i> <%= i18n.__('sidebar.tracking.default') %></a>
         <div class="collapsible-body" style="display: none;">
           <ul>
-            <li class="sub-item"><a href="/notices"><%= i18n.__('sidebar.tracking.notice') %><span class="new badge"></span></a></li>
-            <li class="sub-item"><a href="/events"><%= i18n.__('sidebar.tracking.event') %></a></li>
-            <li class="sub-item"><a href="/reviews"><%= i18n.__('sidebar.tracking.review') %></a></li>
+            <li class="sub-item <%= (menu.current.path == 'notices') ? 'active' : '' %>"><a href="/board/notices"><%= i18n.__('sidebar.tracking.notice') %><span class="new badge"></span></a></li>
+            <li class="sub-item <%= (menu.current.path == 'events')  ? 'active' : '' %>"><a href="/board/events"><%= i18n.__('sidebar.tracking.event') %></a></li>
+            <li class="sub-item <%= (menu.current.path == 'reviews') ? 'active' : '' %>"><a href="/board/reviews"><%= i18n.__('sidebar.tracking.review') %></a></li>
           </ul>
         </div>
       </li>

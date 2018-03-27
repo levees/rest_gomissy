@@ -16,6 +16,9 @@ const assign = Object.assign;
  */
 
 exports.load = async(function* (req, res, next, id) {
+  console.log("### Article id")
+  console.log(id)
+  console.log("### End. Article id")
   try {
     req.article = yield Article.load(id);
     if (!req.article) return next(new Error('Article not found'));
@@ -25,13 +28,14 @@ exports.load = async(function* (req, res, next, id) {
   next();
 });
 
+
 /**
- * List
+ * Index
  */
 
 exports.index = async(function* (req, res) {
   const menu = req.params.menu;
-  console.log(menu);
+  // console.log(menu);
   const page = (req.query.page > 0 ? req.query.page : 1) - 1;
   const _id = req.query.item;
   const limit = 30;
@@ -46,10 +50,41 @@ exports.index = async(function* (req, res) {
   const count = yield Article.count();
 
   respond(res, 'articles/index', {
-    title: 'Articles',
+    pagetitle: res.locals.menu.current.title,
+    breadcrumbs: req.breadcrumbs(),
     articles: articles,
     page: page + 1,
-    pages: Math.ceil(count / limit)
+    pages: Math.ceil(count / limit),
+  });
+});
+
+
+/**
+ * List
+ */
+
+exports.list = async(function* (req, res) {
+  const menu = req.params.menu;
+  // console.log(menu);
+  const page = (req.query.page > 0 ? req.query.page : 1) - 1;
+  const _id = req.query.item;
+  const limit = 30;
+  const options = {
+    limit: limit,
+    page: page
+  };
+
+  if (_id) options.criteria = { _id };
+
+  const articles = yield Article.list(options);
+  const count = yield Article.count();
+
+  respond(res, 'articles/index', {
+    pagetitle: req.currentMenu.title,
+    breadcrumbs: req.breadcrumbs(),
+    articles: articles,
+    page: page + 1,
+    pages: Math.ceil(count / limit),
   });
 });
 

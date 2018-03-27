@@ -43,11 +43,16 @@ MenuSchema.statics = {
    * @api private
    */
 
-  load: function (path) {
-    return this.findOne({ path: path }, function(err, obj) {
-      console.log(obj);
-    });
-  },
+  // load: function (path) {
+  //   var menus = this.findOne({ path: path }, function(err, obj) {
+  //     return obj;
+  //     // return {"err": err, "obj": obj};
+  //     // req.currPage = obj;
+  //     // return obj ? true : false;
+  //     // console.log("Menu Obj");
+  //     // console.log(err);
+  //   });
+  // },
 
   /**
    * List articles

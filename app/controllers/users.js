@@ -48,7 +48,7 @@ exports.signup = function (req, res) {
 exports.create = async(function* (req, res) {
   const user = new User(req.body);
   user.provider = 'local';
-  console.log(user);
+  // console.log(user);
   try {
     yield user.save();
     req.logIn(user, err => {
@@ -56,10 +56,10 @@ exports.create = async(function* (req, res) {
       return res.redirect('/');
     });
   } catch (err) {
-    console.log('error')
+    // console.log('error')
     const errors = Object.keys(err.errors)
       .map(field => err.errors[field].message);
-    
+
     respond(res, 'users/signup', {
       userinfo: user,
       error: errors
@@ -80,12 +80,12 @@ exports.login = function(req, res, next) {
   else
     res.render('users/login', {
       title: 'Login'
-    }); 
+    });
 
   // if (req.params.format == '.json')
   //   res.json('{aaa:bbb}');
   // else
-  //   res.render('users/login'); 
+  //   res.render('users/login');
 };
 
 exports.session = function (req, res) {
@@ -94,8 +94,8 @@ exports.session = function (req, res) {
   req.logIn(user, function(err) {
     // if (err) { return errorLogin(req, res); }
     // return res.send({ success: true, userinfo: user, message: 'authentication succeeded' });
-    if (err) { 
-      respond(res, 'login',{ success: false, message: 'Login failed. Check your login/password.' }); 
+    if (err) {
+      respond(res, 'login',{ success: false, message: 'Login failed. Check your login/password.' });
     }
     respondOrRedirect ({req, res}, '/', user, 'authentication succeeded');
   });
@@ -109,6 +109,7 @@ exports.auth = function(req, res, next) {
   try {
     var incomingToken = jwt.verify(req.query.token, secret);
   } catch (ex) {
+    console.error("ex.stack");
     console.error(ex.stack);
     return res.status(401).send('jwt error');
   }
@@ -128,7 +129,7 @@ exports.auth = function(req, res, next) {
   // construct JWT and redirect to the redirect_uri
 
   var outgoingToken = jwt.sign({"user_id": user_id}, secret);
-  var url = req.query.redirect_uri + 
+  var url = req.query.redirect_uri +
       '&token=' + encodeURIComponent(outgoingToken) +
       '&state=' + encodeURIComponent(req.query.state);
 
@@ -147,6 +148,5 @@ var errorLogin = function(req, res) {
   if (req.params.format == '.json')
     res.json({ success: false, message: 'Login failed. Check your login/password.' });
   else
-    res.render('users/login', { message: 'Login failed. Check your login/password.' }); 
+    res.render('users/login', { message: 'Login failed. Check your login/password.' });
 };
-
