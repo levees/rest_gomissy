@@ -29,18 +29,19 @@ module.exports = function (app, passport) {
   const pauth = passport.authenticate.bind(passport);
   app.use(function (req, res, next) {
     res.locals.userinfo = req.user;
+    res.locals.path = req.path;
     res.locals.menu = { "parent": {"path": ""}, "current": {"path": ""}}
     next();
   });
 
-  app.get('/', home.index);
+  app.get('', home.index);
   app.get('/test/:id/:sid:format(.json)?', home.test);
 
 
   // user routes
   app.get('/signup', users.signup);
   app.get('/login', users.login);
-  app.post('/logout', users.logout);
+  app.get('/logout', users.logout);
   app.get('/auth', users.auth);
   // app.post('/users', users.create);
   // app.post('/users/session',
@@ -96,13 +97,14 @@ module.exports = function (app, passport) {
    * Articles Routes
    */
   app.param('id', articles.load);
-  app.get('/:category(board)/:menu',           hasMenu, articles.index);
-  app.get('/:category(board)/:menu/new',       hasMenu, auth.requiresLogin, articles.new);
-  app.post('/:category(board)/:menu',          hasMenu, auth.requiresLogin, articles.create);
-  app.get('/:category(board)/:menu/:id',       hasMenu, articles.show);
-  app.get('/:category(board)/:menu/:id/edit',  hasMenu, articleAuth, articles.edit);
-  app.put('/:category(board)/:menu/:id',       hasMenu, articleAuth, articles.update);
-  app.delete('/:category(board)/:menu/:id',    hasMenu, articleAuth, articles.destroy);
+  app.get('/:category(board)', function(req,res){res.redirect("/board/notices")});
+  app.get('/:category(board)/:menu',          hasMenu, articles.list);
+  app.get('/:category(board)/:menu/new',      hasMenu, auth.requiresLogin, articles.new);
+  app.post('/:category(board)/:menu',         hasMenu, auth.requiresLogin, articles.create);
+  app.get('/:category(board)/:menu/:id',      hasMenu, articles.show);
+  app.get('/:category(board)/:menu/:id/edit', hasMenu, articleAuth, articles.edit);
+  app.put('/:category(board)/:menu/:id',      hasMenu, articleAuth, articles.update);
+  app.delete('/:category(board)/:menu/:id',   hasMenu, articleAuth, articles.destroy);
 
 
 

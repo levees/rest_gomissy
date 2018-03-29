@@ -15,7 +15,7 @@
     "name": "Name",
     "email": "Email",
     "mobile": "Phone Number",
-  
+
     "signin": {
       "title": "Login",
       "button": "Login",
@@ -30,5 +30,14 @@
     "forgot": {
       "title": "Find Password"
     }
-  }
+  },
+	"board": {
+		"post": {
+			"title": "Title",
+			"content": "Content",
+			"tags": "Tags",
+			"submit": "Submit",
+			"cancel": "Cancel"
+		}
+	}
 }

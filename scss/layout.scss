@@ -50,7 +50,7 @@ $animation_time: 8s;
 
 // /*.ink styles - the elements which will create the ripple effect. The size and position of these elements will be set by the JS code. Initially these elements will be scaled down to 0% and later animated to large fading circles on user click.*/
 // .ink {
-//   display: block; 
+//   display: block;
 //   position: absolute;
 //   background: hsl(180, 40%, 80%);
 //   // background:rgba(255, 255, 255, 0.3);
@@ -88,8 +88,8 @@ $animation_time: 8s;
 
   .nav-info-wrap {
     list-style:none;
-    li { 
-      display: inline-block; 
+    li {
+      display: inline-block;
     }
   }
 
@@ -126,7 +126,7 @@ $animation_time: 8s;
     background: url(/images/profile_bg/2.png) no-repeat;
     background-size: cover;
     margin-bottom: 10px;
-    // opacity: .1;
+    opacity: .1;
 
     a:hover { background-color: transparent; }
 
@@ -236,10 +236,10 @@ $animation_time: 8s;
   }
 
   .content-wrap {
-    .row { } 
+    .row { }
 
     section {
-      // margin-bottom: 30px; 
+      // margin-bottom: 30px;
 
       h3 {
         border-top: 0;
@@ -261,10 +261,10 @@ $animation_time: 8s;
         h4 { margin-left: 5px; margin-bottom: 5px; font-weight: 500; font-size: 1.5em; }
         p { margin: 0; padding: 0; clear:left; }
         .location { font-size: 1.2em; color: lighten($font_color, 10%); }
-        .event-addr { 
-          padding-top: 0px; 
-          font-size: .85em; 
-          color: lighten($font_color, 30%); 
+        .event-addr {
+          padding-top: 0px;
+          font-size: .85em;
+          color: lighten($font_color, 30%);
           i { font-size: 1.1rem; vertical-align:sub; }
         }
         .event-desc {
@@ -274,19 +274,19 @@ $animation_time: 8s;
         .event-desc:after {
           position: absolute;
           left: 0;
-          bottom: 0;  
+          bottom: 0;
           height: 100%;
           width: 100%;
           content: "";
           background: linear-gradient(to top, rgba(255,255,255, 1) 00%, rgba(255,255,255, 0) 80% );
           pointer-events: none; /* so the text is still selectable */
         }
-        .event-meta { 
+        .event-meta {
           p { padding: 0; }
           .event-date { font-weight: 500; font-size: 1.2em; color: lighten($font_color, 10%); }
           .event-rsvp {
             margin: 10px 0;
-            .btn { 
+            .btn {
               padding: 5px 20px;
               height:auto;
               line-height: 1.5rem;
@@ -309,7 +309,7 @@ $animation_time: 8s;
           border-bottom: 1px dotted #ccc;
           display: block;
 
-          p { 
+          p {
             width: auto;
             display: inline-block;
             margin: 0;
@@ -436,7 +436,7 @@ $animation_time: 8s;
   right: 0;
   bottom: 0;
 
-  li {  
+  li {
     height: 100%;
     width: 100%;
     position: absolute;
@@ -446,35 +446,35 @@ $animation_time: 8s;
     background-position:  50%;
     z-index: 0;
     opacity: 0;
-    
-    animation: imageAnimation ($animation_time * 6) linear infinite 0s; 
+
+    animation: imageAnimation ($animation_time * 6) linear infinite 0s;
   }
   li:nth-child(1){
     background-image: url(/images/profile_bg/1.png);
   }
   li:nth-child(2){
     background-image: url(/images/profile_bg/2.png);
-    animation-delay: $animation_time; 
+    animation-delay: $animation_time;
   }
   li:nth-child(3){
     background-image: url(/images/profile_bg/4.png);
-    animation-delay: ($animation_time * 2); 
+    animation-delay: ($animation_time * 2);
   }
   li:nth-child(4){
     background-image: url(/images/profile_bg/8.png);
-    animation-delay: ($animation_time * 3); 
+    animation-delay: ($animation_time * 3);
   }
   li:nth-child(5){
     background-image: url(/images/profile_bg/9.png);
-    animation-delay: ($animation_time * 4); 
+    animation-delay: ($animation_time * 4);
   }
   li:nth-child(6){
     background-image: url(/images/profile_bg/5.png);
-    animation-delay: ($animation_time * 5); 
+    animation-delay: ($animation_time * 5);
   }
 }
 
-@keyframes imageAnimation { 
+@keyframes imageAnimation {
   0% { opacity: 0; animation-timing-function: ease-in; }
   8% { opacity: 1; animation-timing-function: ease-out; }
   17% { opacity: 1 }
@@ -483,5 +483,3 @@ $animation_time: 8s;
 }
 
 @import "responsive";
-
-

@@ -34,27 +34,12 @@ exports.load = async(function* (req, res, next, id) {
  */
 
 exports.index = async(function* (req, res) {
-  const menu = req.params.menu;
-  // console.log(menu);
-  const page = (req.query.page > 0 ? req.query.page : 1) - 1;
-  const _id = req.query.item;
-  const limit = 30;
-  const options = {
-    limit: limit,
-    page: page
-  };
-
-  if (_id) options.criteria = { _id };
-
-  const articles = yield Article.list(options);
-  const count = yield Article.count();
+  console.log(res.path)
 
   respond(res, 'articles/index', {
     pagetitle: res.locals.menu.current.title,
     breadcrumbs: req.breadcrumbs(),
-    articles: articles,
-    page: page + 1,
-    pages: Math.ceil(count / limit),
+
   });
 });
 
@@ -79,8 +64,8 @@ exports.list = async(function* (req, res) {
   const articles = yield Article.list(options);
   const count = yield Article.count();
 
-  respond(res, 'articles/index', {
-    pagetitle: req.currentMenu.title,
+  respond(res, 'articles/list', {
+    pagetitle: res.locals.menu.current.title,
     breadcrumbs: req.breadcrumbs(),
     articles: articles,
     page: page + 1,
@@ -94,7 +79,8 @@ exports.list = async(function* (req, res) {
 
 exports.new = function (req, res){
   res.render('articles/new', {
-    title: 'New Article',
+    pagetitle: res.locals.menu.current.title,
+    breadcrumbs: req.breadcrumbs(),
     article: new Article()
   });
 };
