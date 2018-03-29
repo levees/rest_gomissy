@@ -51,6 +51,13 @@ exports.create = async(function* (req, res) {
   // console.log(user);
   try {
     yield user.save();
+
+    // send email validation
+    mailer.activation(user, function(err) {
+      if (err) return res.render('users/error', { signup_errors: err.errors, login_errors: '', user: user })
+      return res.render('signup/complete', { title:'SignUp Complete', signup_errors: '', login_errors: '', user: user });
+    })
+
     req.logIn(user, err => {
       if (err) req.flash('info', 'Sorry! We are not able to log you in!');
       return res.redirect('/');

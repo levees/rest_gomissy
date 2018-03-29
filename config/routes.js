@@ -40,6 +40,7 @@ module.exports = function (app, passport) {
 
   // user routes
   app.get('/signup', users.signup);
+  app.get('/signup/complete', users.complete);
   app.get('/login', users.login);
   app.get('/logout', users.logout);
   app.get('/auth', users.auth);
