@@ -5,11 +5,13 @@
  */
 
 const mongoose = require('mongoose');
-const { wrap: async } = require('co');
+const multer = require('multer')
 const only = require('only');
+const { wrap: async } = require('co');
 const { respond, respondOrRedirect } = require('../../config/respond');
 const Article = mongoose.model('Article');
 const assign = Object.assign;
+const upload = multer({ dest: 'uploads/' })
 
 /**
  * Load

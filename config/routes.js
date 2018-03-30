@@ -5,6 +5,7 @@
  */
 const home      = require('../app/controllers/home');
 const users     = require('../app/controllers/users');
+const uploads   = require('../app/controllers/uploads');
 const articles  = require('../app/controllers/articles');
 const comments  = require('../app/controllers/comments');
 const auth      = require('./auth');
@@ -40,7 +41,7 @@ module.exports = function (app, passport) {
 
   // user routes
   app.get('/signup', users.signup);
-  app.get('/signup/complete', users.complete);
+  // app.get('/signup/complete', users.complete);
   app.get('/login', users.login);
   app.get('/logout', users.logout);
   app.get('/auth', users.auth);
@@ -93,6 +94,11 @@ module.exports = function (app, passport) {
   //   next();
   // };
 
+
+  /**
+   * File uploads
+   */
+   app.post('/upload', uploads.index)
 
   /**
    * Articles Routes

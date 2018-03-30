@@ -9,8 +9,8 @@
       </div>
 
       <div class="input-field col s12">
-        <textarea id="content" name="content" class="materialize-textarea" required></textarea>
-        <label for="password"><%= i18n.__('board.post.content') %></label>
+        <textarea id="body" name="body" class="materialize-textarea" required></textarea>
+        <label for="body"><%= i18n.__('board.post.content') %></label>
       </div>
 
       <div class="input-field col s12">
@@ -20,11 +20,11 @@
 
       <div class="input-field col s12">
         <button class="btn waves-effect waves-light" type="submit" name="action">
-          <i class="material-icons right">send</i><%= i18n.__('board.post.submit') %>
+          <i class="material-icons left">send</i><%= i18n.__('board.post.submit') %>
         </button>
-      </div>
-      <div class="input-field col s12">
-        <p class="margin center medium-small sign-up"><a href="<%= path %>/list"><%= i18n.__('board.post.cancel') %></a></p>
+        <button class="btn" type="button" name="cancel">
+          <i class="material-icons left">cancel</i><%= i18n.__('board.post.cancel') %>
+        </button>
       </div>
     </div>
   </form>
