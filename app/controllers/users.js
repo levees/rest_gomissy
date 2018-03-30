@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const { wrap: async } = require('co');
 const { respond, respondOrRedirect } = require('../../config/respond');
 const User = mongoose.model('User');
+const mailer = require('../mailer/index')
 
 
 /**

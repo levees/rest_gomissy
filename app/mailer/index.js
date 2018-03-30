@@ -28,6 +28,45 @@ Notifier.prototype.processTemplate = function (tplPath, locals) {
 module.exports = {
 
   /**
+   * Activation notification
+   *
+   * @param {Object} options
+   * @param {Function} cb
+   * @api public
+   */
+
+   activation: function(options, callback) {
+     var user = options
+     const notifier = new Notifier(config.notifier);
+
+     const obj = {
+       to: user.email,
+       from: 'noreply@goodfriends.co',
+       subject: 'Congrat! Welcome to Goodfriends.',
+       // alert: user.name + ' says: "' + options.comment,
+       locals: {
+         to: user.name,
+         from: "goodfriends team",
+         body: "test body"
+       }
+     };
+
+     // for apple push notifications
+     /*notifier.use({
+       APN: true
+       parseChannels: ['USER_' + author._id.toString()]
+     })*/
+
+     try {
+       notifier.send('activation', obj, cb);
+     } catch (err) {
+       console.log(err);
+     }
+   },
+
+
+
+  /**
    * Comment notification
    *
    * @param {Object} options
