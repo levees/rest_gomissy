@@ -16,10 +16,10 @@ const config = require('../../config/config');
  * @api public
  */
 
-Notifier.prototype.processTemplate = function (tplPath, locals) {
-  locals.filename = tplPath;
-  return jade.renderFile(tplPath, locals);
-};
+// Notifier.prototype.processTemplate = function (tplPath, locals) {
+//   locals.filename = tplPath;
+//   return jade.renderFile(tplPath, locals);
+// };
 
 /**
  * Expose
@@ -35,34 +35,35 @@ module.exports = {
    * @api public
    */
 
-   activation: function(options, callback) {
-     var user = options
-     const notifier = new Notifier(config.notifier);
-
-     const obj = {
-       to: user.email,
-       from: 'noreply@goodfriends.co',
-       subject: 'Congrat! Welcome to Goodfriends.',
-       // alert: user.name + ' says: "' + options.comment,
-       locals: {
-         to: user.name,
-         from: "goodfriends team",
-         body: "test body"
-       }
-     };
-
-     // for apple push notifications
-     /*notifier.use({
-       APN: true
-       parseChannels: ['USER_' + author._id.toString()]
-     })*/
-
-     try {
-       notifier.send('activation', obj, cb);
-     } catch (err) {
-       console.log(err);
-     }
-   },
+   // activation: function(options, callback) {
+   //   var user = options
+   //   const notifier = new Notifier(config.notifier);
+   //
+   //   const obj = {
+   //     to: user.email,
+   //     from: 'noreply@goodfriends.co',
+   //     subject: 'Congrat! Welcome to Goodfriends.',
+   //     // alert: user.name + ' says: "' + options.comment,
+   //     locals: {
+   //       to: user.name,
+   //       from: "goodfriends team",
+   //       body: "test body"
+   //     }
+   //   };
+   //   console.log(obj);
+   //
+   //   // for apple push notifications
+   //   /*notifier.use({
+   //     APN: true
+   //     parseChannels: ['USER_' + author._id.toString()]
+   //   })*/
+   //
+   //   try {
+   //     notifier.send('activation', obj, callback);
+   //   } catch (err) {
+   //     console.log(err);
+   //   }
+   // },
 
 
 

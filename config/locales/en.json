@@ -28,7 +28,16 @@
       "signin": "Already have an account? Login here!"
     },
     "forgot": {
-      "title": "Find Password"
+      "title": "Find Password",
+			"email": "Email",
+			"submit": "Send",
+			"cancel": "Cancel"
+    },
+    "reset": {
+      "title": "Reset Password",
+			"password": "Password",
+			"submit": "Update",
+			"cancel": "Cancel"
     }
   },
 	"board": {

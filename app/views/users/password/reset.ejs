@@ -1,0 +1,30 @@
+<% layout('/empty') -%>
+
+<div class="user-container">
+  <ul id="bg-slider"><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+  <div class="user-wrap">
+    <form role="form" action="/password/reset" method="post">
+      <input type="hidden" name="_id" value="<%= user._id %>" />
+      <!-- <input type="hidden" name="_csrf" value="<= csrf_token %>" /> -->
+      <div class="row">
+        <h4><%= i18n.__('users.reset.title') %></h4>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="password" name="password" type="password" class="validate" value="" required />
+          <label for="password" data-error="wrong" data-success="right" class=""><%= i18n.__('users.reset.password') %></label>
+        </div>
+
+        <div class="input-field col s12">
+          <p class="medium-small sign-up">
+            <button class="btn waves-effect waves-light" type="submit" name="action">
+              <i class="material-icons right">send</i><%= i18n.__('users.reset.submit') %>
+            </button>
+          </p>
+          <p class="medium-small sign-up"><a href="/forgot"><%= i18n.__('users.reset.cancel') %></a></p>
+        </div>
+
+      </div>
+    </form>
+  </div>
+</div>

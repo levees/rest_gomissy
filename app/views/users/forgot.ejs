@@ -1,0 +1,30 @@
+<% layout('/empty') -%>
+
+<div class="user-container">
+  <ul id="bg-slider"><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+  <div class="user-wrap">
+    <form role="form" action="/forgot" method="post">
+      <!-- <input type="hidden" name="_csrf" value="<= csrf_token %>" /> -->
+      <div class="row">
+        <h4><%= i18n.__('users.forgot.title') %></h4>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="email" name="email" type="email" class="validate" value="" required />
+          <label for="email" data-error="wrong" data-success="right" class=""><%= i18n.__('users.email') %></label>
+        </div>
+
+        <div class="input-field col s12">
+          <p class="medium-small sign-up">
+            <button class="btn waves-effect waves-light" type="submit" name="action">
+              <i class="material-icons right">send</i><%= i18n.__('users.forgot.submit') %>
+            </button>
+          </p>
+        </div>
+        <div class="col s12">
+          <p class="medium-small sign-up"><a href="/login"><%= i18n.__('users.signin.signin') %></a></p>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

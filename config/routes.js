@@ -38,6 +38,7 @@ module.exports = function (app, passport) {
   app.get('', home.index);
   app.get('/test/:id/:sid:format(.json)?', home.test);
 
+  // app.get('/user/send', users.send)
 
   // user routes
   app.get('/signup', users.signup);
@@ -45,6 +46,7 @@ module.exports = function (app, passport) {
   app.get('/login', users.login);
   app.get('/logout', users.logout);
   app.get('/auth', users.auth);
+  app.get('/forgot', users.forgot);
   // app.post('/users', users.create);
   // app.post('/users/session',
   //   pauth('local', {
@@ -74,7 +76,9 @@ module.exports = function (app, passport) {
       failureRedirect: '/login',
       failureFlash: 'Invalid email or password.'
     }), users.session);
-
+  app.post('/forgot', users.password_token);
+  app.get('/password/reset', users.reset)
+  app.post('/password/reset', users.update_password)
   // app.post('/login', passport.authenticate('ldapauth', {session: false}), function(req, res) {
   //   console.log(req.user);
   //   res.send({status: 'ok'});

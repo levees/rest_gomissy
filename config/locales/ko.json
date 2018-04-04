@@ -28,7 +28,16 @@
       "signin": "로그인 하기"
     },
     "forgot": {
-      "title": "비밀번호 찾기"
+      "title": "비밀번호 찾기",
+			"email": "이메일",
+			"submit": "발송하기",
+			"cancel": "취소"
+    },
+    "reset": {
+      "title": "비밀번호 변경",
+			"password": "비밀번호",
+			"submit": "확인",
+			"cancel": "취소"
     }
   },
 	"board": {

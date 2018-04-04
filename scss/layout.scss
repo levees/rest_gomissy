@@ -216,6 +216,12 @@ $animation_time: 8s;
   transition: all $sidebar_transition_duration;
   transition-timing-function: ease;
 
+  label.force-active {
+    transform: translateY(-14px) scale(.8);
+    transform-origin: 0 0;
+    color: $input-focus-color;
+  }
+
   .container {
     position: relative;
     margin: 0;
@@ -424,6 +430,12 @@ $animation_time: 8s;
     border-radius: 5px;
   }
 }
+
+.note-editor.note-frame {
+  margin: 10px 0;
+  border: 1px solid #eeeeee;
+}
+
 
 #bg-slider{
   margin: 0;

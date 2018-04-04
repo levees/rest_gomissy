@@ -5,17 +5,17 @@
     <div class="row">
       <div class="input-field col s12">
         <input id="title" name="title" type="text" class="validate" value="" required />
-        <label for="title"><%= i18n.__('board.post.title') %></label>
+        <label for="title" class="force-active"><%= i18n.__('board.post.title') %></label>
       </div>
 
       <div class="input-field col s12">
-        <textarea id="body" name="body" class="materialize-textarea" required></textarea>
-        <label for="body"><%= i18n.__('board.post.content') %></label>
+        <textarea id="body" name="body" class="" required></textarea>
+        <label for="body" class="force-active"><%= i18n.__('board.post.content') %></label>
       </div>
 
       <div class="input-field col s12">
         <input id="tags" name="tags" type="text" required />
-        <label for="tags"><%= i18n.__('board.post.tags') %></label>
+        <label for="tags" class="force-active"><%= i18n.__('board.post.tags') %></label>
       </div>
 
       <div class="input-field col s12">
@@ -29,3 +29,7 @@
     </div>
   </form>
 </div>
+
+<% stylesheet('http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-lite.css') -%>
+<% script('http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-lite.js') -%>
+<% script('/js/articles.js') -%>

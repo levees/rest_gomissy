@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 const { wrap: async } = require('co');
 const { respond, respondOrRedirect } = require('../../config/respond');
 const User = mongoose.model('User');
-const mailer = require('../mailer/index')
+const mailer = require('../mailer/email')
 
 
 /**
@@ -25,7 +25,6 @@ const mailer = require('../mailer/index')
 //   }
 //   next();
 // });
-
 
 
 /**
@@ -51,20 +50,21 @@ exports.create = async(function* (req, res) {
   user.provider = 'local';
   // console.log(user);
   try {
+    user.activation.authCode = user.encryptAuthCode();
     yield user.save();
 
-    // send email validation
-    mailer.activation(user, function(err) {
+    // send email confirmation
+    mailer.confirmation(user, function(err) {
       if (err) return res.render('users/error', { signup_errors: err.errors, login_errors: '', user: user })
-      return res.render('signup/complete', { title:'SignUp Complete', signup_errors: '', login_errors: '', user: user });
-    })
+      return res.render('users/complete', { title:'SignUp Complete', signup_errors: '', login_errors: '', user: user });
+    });
 
     req.logIn(user, err => {
       if (err) req.flash('info', 'Sorry! We are not able to log you in!');
       return res.redirect('/');
     });
   } catch (err) {
-    // console.log('error')
+    console.log(err)
     const errors = Object.keys(err.errors)
       .map(field => err.errors[field].message);
 
@@ -148,7 +148,75 @@ exports.auth = function(req, res, next) {
 exports.logout = function(req, res, next) {
   var access_token = req.headers['x-auth-token'];
   console.log(access_token);
+  req.logout()
+  res.redirect('/')
 }
+
+/**
+ * Forgot password
+ */
+
+exports.forgot = function(req, res, next) {
+  if (req.user)
+    res.redirect('/');
+  else
+    res.render('users/forgot', {
+      title: 'Forgot Password'
+    });
+}
+
+exports.password_token = function(req, res, next) {
+  if (req.user) {
+    res.redirect('/');
+  }
+  else {
+    var email = req.body.email;
+    User.temp_password(email, function(err, user, token) {
+      if (err) { return next(err); }
+
+      user.password_token = token;
+      // send email reset password
+      mailer.resetpassword(user, function(err) {
+        if (err) return res.render('users/password/error', { errors: err.errors })
+        return res.render('users/password/complete', { title:'Reset password' });
+      })
+    });
+  }
+}
+
+/**
+ * Reset password
+ */
+
+exports.reset = function(req, res, next) {
+  if (req.user)
+    res.redirect('/');
+  else {
+    var token = req.query.token;
+    User.findOne({password_token: token}, function(err, user) {
+      if (err) return res.render('users/password/error', { errors: err.errors });
+      return res.render('users/password/reset', {
+        title:'Reset password',
+        user: user
+      });
+    })
+  }
+}
+
+exports.update_password = function(req, res, next) {
+  var id = req.body._id;
+  var password = req.body.password;
+  User.findOne({_id: id}, function(err, user) {
+    user.password = password;
+    user.save();
+
+    req.logIn(user, err => {
+      if (err) req.flash('info', 'Sorry! We are not able to log you in!');
+      return res.redirect('/');
+    });
+  })
+}
+
 
 
 
