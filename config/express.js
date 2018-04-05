@@ -45,7 +45,7 @@ module.exports = function (app, passport) {
     dir: config.root + '/config/locales',
     extension: 'json'
   })
-  app.use(i18n.init());  
+  app.use(i18n.init());
   app.use(function(req,res,next) {
     var lang = req.headers["accept-language"].split('-')[0];
     i18n.setLocale(lang);
@@ -55,13 +55,13 @@ module.exports = function (app, passport) {
   // adding the sass middleware
   app.use(
    sass({
-     src: config.root + '/scss', 
+     src: config.root + '/scss',
      dest: config.root + '/public/css',
      prefix: '/css',
      outputStyle: 'compressed',
-     debug: true,       
+     debug: true,
    })
-  ); 
+  );
 
   // Static files middleware
   app.use(express.static(config.root + '/public'));
@@ -94,7 +94,7 @@ module.exports = function (app, passport) {
 
   // bodyParser should be above methodOverride
   app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
   app.use(methodOverride(function (req) {
     if (req.body && typeof req.body === 'object' && '_method' in req.body) {
       // look in urlencoded POST bodies and delete it
@@ -123,7 +123,7 @@ module.exports = function (app, passport) {
   //   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
   //   credentials: true
   // }));
-  
+
   app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header('Access-Control-Allow-Methods', 'POST, GET, UPDATE, DELETE, PUT');
@@ -141,7 +141,7 @@ module.exports = function (app, passport) {
   // Breadcrumb init
   app.use(breadcrumbs.init());
 
-  // Set Breadcrumbs home information 
+  // Set Breadcrumbs home information
   app.use(breadcrumbs.setHome());
 
   // should be declared after session and flash

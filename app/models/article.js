@@ -99,7 +99,6 @@ ArticleSchema.pre('remove', function (next) {
  */
 
 ArticleSchema.methods = {
-
   /**
    * Save article and upload image
    *
@@ -107,10 +106,12 @@ ArticleSchema.methods = {
    * @api private
    */
 
-  uploadAndSave: function (image) {
-    const err = this.validateSync();
-    if (err && err.toString()) throw new Error(err.toString());
-    return this.save();
+  uploadAndSave: function (article) {
+
+
+    // const err = this.validateSync();
+    // if (err && err.toString()) throw new Error(err.toString());
+    // return this.save();
 
     /*
     if (images && !images.length) return this.save();

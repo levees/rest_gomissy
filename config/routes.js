@@ -111,7 +111,7 @@ module.exports = function (app, passport) {
   app.get('/:category(board)', function(req,res){res.redirect("/board/notices")});
   app.get('/:category(board)/:menu',          hasMenu, articles.list);
   app.get('/:category(board)/:menu/new',      hasMenu, auth.requiresLogin, articles.new);
-  app.post('/:category(board)/:menu',         hasMenu, auth.requiresLogin, articles.create);
+  app.post('/:category(board)/:menu/new',     hasMenu, auth.requiresLogin, articles.create);
   app.get('/:category(board)/:menu/:id',      hasMenu, articles.show);
   app.get('/:category(board)/:menu/:id/edit', hasMenu, articleAuth, articles.edit);
   app.put('/:category(board)/:menu/:id',      hasMenu, articleAuth, articles.update);

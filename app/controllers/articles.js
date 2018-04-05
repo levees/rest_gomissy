@@ -8,11 +8,14 @@ const mongoose = require('mongoose');
 const multer = require('multer')
 const only = require('only');
 const { wrap: async } = require('co');
+const config = require('../../config/config');
 const { respond, respondOrRedirect } = require('../../config/respond');
 const Article = mongoose.model('Article');
 const assign = Object.assign;
-const upload = multer({ dest: 'uploads/' })
-
+// const upload = multer({ dest: 'uploads/' })
+const fs = require('fs');
+const path = require('path');
+const moment = require('moment');
 /**
  * Load
  */
@@ -95,19 +98,24 @@ exports.new = function (req, res){
 exports.create = async(function* (req, res) {
   const article = new Article(only(req.body, 'title body tags'));
   article.user = req.user;
-  try {
-    yield article.uploadAndSave(req.file);
-    respondOrRedirect({ req, res }, `/articles/${article._id}`, article, {
-      type: 'success',
-      text: 'Successfully created article!'
-    });
-  } catch (err) {
-    respond(res, 'articles/new', {
-      title: article.title || 'New Article',
-      errors: [err.toString()],
-      article
-    }, 422);
-  }
+  article.menu = res.locals.menu.current;
+  // try {
+
+    var body = bodyWithImgs(req.body.body, res.locals.menu.current.title);
+    console.log(body);
+    // res.send(body);
+    // yield article.uploadAndSave(article);
+    // respondOrRedirect({ req, res }, `/articles/${article._id}`, article, {
+    //   type: 'success',
+    //   text: 'Successfully created article!'
+    // });
+  // } catch (err) {
+  //   respond(res, 'articles/new', {
+  //     title: article.title || 'New Article',
+  //     errors: [err.toString()],
+  //     article
+  //   }, 422);
+  // }
 });
 
 /**
@@ -162,3 +170,51 @@ exports.destroy = async(function* (req, res) {
     text: 'Deleted successfully'
   });
 });
+
+
+/**
+ * body with image tag from summernode data
+ */
+
+var bodyWithImgs = function(htmlText, board, pathToSaveImg = 'public/uploads', baseUrl = '', append = true) {
+  var htmlWithImgUrls  = htmlText.replace(/src=\"data:([^\"]+)\"/gi,function(matches){
+    var splitted =  (matches).split(';');
+    var contentType = splitted[0];
+    var encContent = splitted[1];
+    var imgBase64 = encContent.substr(6);
+    if (encContent.substr(0,6) != 'base64') {
+      return matches;
+    }
+    // var imgFilename = imgBase64.substr(1,8).replace(/[^\w\s]/gi, '') + Date.now() + String(Math.random() * (900000000)).replace('.',''); // Generate a unique filename
+    var imgFilename = board.toLowerCase() + moment().format('YYYYMMDD') + String(Math.random() * (900000000)).replace('.','');
+    var imgExt = '';
+    switch(contentType.split(':')[1]) {
+        case 'image/jpeg': imgExt = 'jpg'; break;
+        case 'image/gif': imgExt = 'gif'; break;
+        case 'image/png': imgExt = 'png'; break;
+        default: return matches;
+    }
+    if (!fs.existsSync(pathToSaveImg)){
+        fs.mkdirSync(pathToSaveImg);
+    }
+    var imgPath = path.join(path.join(process.cwd(), pathToSaveImg), imgFilename + '.' + imgExt);
+    var base64Data = encContent.replace(/^base64,/, "");
+    fs.writeFile(imgPath, base64Data, 'base64', function(err) {
+      console.log(err); // Something went wrong trying to save Image
+    });
+
+    if(baseUrl){
+      var formattedBaseUrl = (((baseUrl[baseUrl.len - 1]) == '/')? baseUrl : (baseUrl+'/'));
+    }
+    else{
+      var formattedBaseUrl = '/';
+    }
+    if (append){
+      return 'src="'+formattedBaseUrl+pathToSaveImg+'/'+imgFilename+'.'+imgExt+'"';
+    }
+    else {
+      return 'src="'+formattedBaseUrl+imgFilename+'.'+imgExt+'"';
+    }
+  });
+  return htmlWithImgUrls;
+};
