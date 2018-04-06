@@ -436,6 +436,26 @@ $animation_time: 8s;
   border: 1px solid #eeeeee;
 }
 
+table.board-list {
+  tbody {
+    tr {
+      border-bottom: 1px solid #eee;
+      // cursor: pointer;
+
+      // &:hover {
+      //   background-color: #f5f5f5;
+      //   td.title { color: $font_color_link; }
+      // }
+      // &:nth-child(even) {
+      //   background-color: #f5f5f5;
+      // }
+
+      td.title { width: 60%; }
+      td.writer { width: 20%; }
+      td.created { width: 20%; }
+    }
+  }
+}
 
 #bg-slider{
   margin: 0;

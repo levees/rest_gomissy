@@ -71,6 +71,10 @@ const UserSchema = new Schema({
   //   authCode: String,
   //   status: { type: Boolean, default: false }
   // },
+  level: {
+    type: Number,
+    default: 101
+  },
   created_at: Date,
   updated_at: Date
 });

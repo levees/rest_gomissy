@@ -18,17 +18,39 @@ const setTags = tags => tags.split(',');
 
 
 /**
+ * Comment Schema
+ */
+
+const CommentSchema = new Schema({
+  body: {
+    type: String,
+    default: ''
+  },
+  user: {
+    type: Schema.ObjectId,
+    ref: 'User'
+  },
+  created_at: {
+    type: Date,
+    default: Date.now
+  }
+});
+
+
+/**
  * Article Schema
  */
 
 const ArticleSchema = new Schema({
   user: {
     type: Schema.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    index: true
   },
   menu: {
     type: Schema.ObjectId,
-    ref: 'Menu.sub_menu'
+    ref: 'Menu.sub_menu',
+    index: true
   },
   title: {
     type: String,
@@ -36,34 +58,20 @@ const ArticleSchema = new Schema({
     trim: true
   },
   body: {
-    type : String,
-    default : '',
-    trim : true
+    type: String,
+    default: '',
+    trim: true
   },
-  comments: [
-    {
-      body: {
-        type : String,
-        default : ''
-      },
-      user: {
-        type : Schema.ObjectId,
-        ref : 'User'
-      },
-      created_at: {
-        type : Date,
-        default : Date.now
-      }
-    }
-  ],
+  comments: [CommentSchema],
   tags: {
     type: [],
     get: getTags,
-    set: setTags
+    set: setTags,
+    trim: true
   },
-  image: {
-    cdnUri: String,
-    files: []
+  ip_address: {
+    type: String,
+    default: ''
   },
   created_at  : {
     type : Date,
@@ -99,33 +107,6 @@ ArticleSchema.pre('remove', function (next) {
  */
 
 ArticleSchema.methods = {
-  /**
-   * Save article and upload image
-   *
-   * @param {Object} images
-   * @api private
-   */
-
-  uploadAndSave: function (article) {
-
-
-    // const err = this.validateSync();
-    // if (err && err.toString()) throw new Error(err.toString());
-    // return this.save();
-
-    /*
-    if (images && !images.length) return this.save();
-    const imager = new Imager(imagerConfig, 'S3');
-
-    imager.upload(images, function (err, cdnUri, files) {
-      if (err) return cb(err);
-      if (files.length) {
-        self.image = { cdnUri : cdnUri, files : files };
-      }
-      self.save(cb);
-    }, 'article');
-    */
-  },
 
   /**
    * Add comment

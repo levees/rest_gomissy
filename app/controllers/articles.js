@@ -5,17 +5,20 @@
  */
 
 const mongoose = require('mongoose');
-const multer = require('multer')
 const only = require('only');
 const { wrap: async } = require('co');
 const config = require('../../config/config');
+const func = require('../../config/function');
 const { respond, respondOrRedirect } = require('../../config/respond');
 const Article = mongoose.model('Article');
 const assign = Object.assign;
+// const multer = require('multer')
 // const upload = multer({ dest: 'uploads/' })
 const fs = require('fs');
 const path = require('path');
 const moment = require('moment');
+const shortId = require('id-shorter');
+
 /**
  * Load
  */
@@ -24,8 +27,15 @@ exports.load = async(function* (req, res, next, id) {
   console.log("### Article id")
   console.log(id)
   console.log("### End. Article id")
+  var ids = id.split('-');
+  var id = ids[ids.length - 1];
+  console.log(id)
+  var shortid = shortId({isFullId: true});
+  var decoded_id = shortid.decode(id);
+  console.log(decoded_id);
+
   try {
-    req.article = yield Article.load(id);
+    req.article = yield Article.load(decoded_id);
     if (!req.article) return next(new Error('Article not found'));
   } catch (err) {
     return next(err);
@@ -60,21 +70,25 @@ exports.list = async(function* (req, res) {
   const _id = req.query.item;
   const limit = 30;
   const options = {
+    criteria: { menu: res.locals.menu.current },
     limit: limit,
     page: page
   };
 
+  console.log(options);
+
   if (_id) options.criteria = { _id };
 
   const articles = yield Article.list(options);
-  const count = yield Article.count();
+  const count = yield Article.count(options.criteria);
 
   respond(res, 'articles/list', {
     pagetitle: res.locals.menu.current.title,
     breadcrumbs: req.breadcrumbs(),
     articles: articles,
-    page: page + 1,
-    pages: Math.ceil(count / limit),
+    page: { current: page + 1, total: Math.ceil(count / limit), block: limit },
+    moment: moment,
+    shortid: shortId({isFullId: true})
   });
 });
 
@@ -99,23 +113,25 @@ exports.create = async(function* (req, res) {
   const article = new Article(only(req.body, 'title body tags'));
   article.user = req.user;
   article.menu = res.locals.menu.current;
-  // try {
+  article.body = bodyWithImgs(req.body.body, res.locals.menu.current.title);
+  article.ip_address = func.getIPAddr();
 
-    var body = bodyWithImgs(req.body.body, res.locals.menu.current.title);
-    console.log(body);
-    // res.send(body);
-    // yield article.uploadAndSave(article);
-    // respondOrRedirect({ req, res }, `/articles/${article._id}`, article, {
-    //   type: 'success',
-    //   text: 'Successfully created article!'
-    // });
-  // } catch (err) {
-  //   respond(res, 'articles/new', {
-  //     title: article.title || 'New Article',
-  //     errors: [err.toString()],
-  //     article
-  //   }, 422);
-  // }
+  article.save(function(err) {
+    if (err) {
+      return respond(res, 'articles/new', {
+          pagetitle: article.title || 'New Article',
+          breadcrumbs: req.breadcrumbs(),
+          errors: [err.toString()],
+          article
+        }, 422);
+    }
+    else {
+      return respondOrRedirect({ req, res }, `/${res.locals.menu.parent.path}/${res.locals.menu.current.path}/${article._id}`, article, {
+          type: 'success',
+          text: 'Successfully created article!'
+        });
+    }
+  });
 });
 
 /**

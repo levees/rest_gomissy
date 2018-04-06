@@ -25,7 +25,11 @@ const MenuSchema = new Schema({
     type: String
   },
   auth: {
-    type: String
+    type: Boolean
+  },
+  post: {
+    type: Number,
+    default: 100  // Odinary user from 101, Admin user from 1001, If user level above this value then can be posted article
   },
   used_in: {
     type: Boolean,

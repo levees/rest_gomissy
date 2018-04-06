@@ -1,0 +1,24 @@
+<% page.total = (page.total == 0) ? 1 : page.total; %>
+<ul class="pagination">
+  <% if (page.current <= 1) { %>
+    <li class="disabled"><i class="material-icons">chevron_left</i></li>
+  <% } else { %>
+    <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+  <% } %>
+  <% for (var i=1; i<= page.total; i++) { %>
+    <% if (page.current == i) { %>
+      <li class="active"><a href="#!"><%= i %></a></li>
+    <% } else { %>
+      <li class="waves-effect"><a href="#!"><%= i %></a></li>
+    <% } %>
+  <% } %>
+  <% if (page.total > (Math.ceil(page.current / page.block) + 1) * page.block) { %>
+    <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+  <% } else { %>
+    <li class="disabled"><i class="material-icons">chevron_right</i></li>
+  <% } %>
+
+  <li class="right">
+    <% if (userinfo && userinfo.level > menu.current.post) { %><a class="btn btn-primary" href="<%= path %>/new">Post</a><% } %>
+  </li>
+</ul>
