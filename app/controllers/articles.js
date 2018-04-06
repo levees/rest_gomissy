@@ -24,15 +24,10 @@ const shortId = require('id-shorter');
  */
 
 exports.load = async(function* (req, res, next, id) {
-  console.log("### Article id")
-  console.log(id)
-  console.log("### End. Article id")
   var ids = id.split('-');
   var id = ids[ids.length - 1];
-  console.log(id)
   var shortid = shortId({isFullId: true});
   var decoded_id = shortid.decode(id);
-  console.log(decoded_id);
 
   try {
     req.article = yield Article.load(decoded_id);
@@ -49,8 +44,6 @@ exports.load = async(function* (req, res, next, id) {
  */
 
 exports.index = async(function* (req, res) {
-  console.log(res.path)
-
   respond(res, 'articles/index', {
     pagetitle: res.locals.menu.current.title,
     breadcrumbs: req.breadcrumbs(),
@@ -74,8 +67,6 @@ exports.list = async(function* (req, res) {
     limit: limit,
     page: page
   };
-
-  console.log(options);
 
   if (_id) options.criteria = { _id };
 
@@ -126,7 +117,9 @@ exports.create = async(function* (req, res) {
         }, 422);
     }
     else {
-      return respondOrRedirect({ req, res }, `/${res.locals.menu.parent.path}/${res.locals.menu.current.path}/${article._id}`, article, {
+      var shortid = shortId({isFullId: true});
+      var pagename = article.title.split(' ').join('-') + '-' + shortid.encode(article._id)
+      return respondOrRedirect({ req, res }, `/${res.locals.menu.parent.path}/${res.locals.menu.current.path}/${pagename}`, article, {
           type: 'success',
           text: 'Successfully created article!'
         });
@@ -170,8 +163,10 @@ exports.update = async(function* (req, res){
 
 exports.show = function (req, res){
   respond(res, 'articles/show', {
-    title: req.article.title,
-    article: req.article
+    pagetitle: res.locals.menu.current.title,
+    breadcrumbs: req.breadcrumbs(),
+    article: req.article,
+    moment: moment
   });
 };
 

@@ -1,24 +1,26 @@
 <% layout('/layout') -%>
 
-<table class="board-list highlight">
-  <thead>
-    <tr>
-      <th></th>
-      <th class="title">Subject</th>
-      <th class="writer">Writer</th>
-      <th class="created">created</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% articles.forEach(function(article) { %>
-    <% var pagename = article.title.split(' ').join('-') + '-' + shortid.encode(article._id) %>
-    <tr>
-      <td></td>
-      <td class="title"><a href="<%= menu.current.path %>/<%= pagename %>"><%= article.title %></a></td>
-      <td class="writer"><%= article.user.username %></td>
-      <td class="created"><%= moment(article.created).format("llll") %></td>
-    </tr>
-    <% }); %>
-</table>
+<div class="col s12 m12 l12">
+  <table class="board-list highlight">
+    <thead>
+      <tr>
+        <th></th>
+        <th class="title">Subject</th>
+        <th class="writer">Writer</th>
+        <th class="created">created</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% articles.forEach(function(article) { %>
+      <% var pagename = article.title.split(' ').join('-') + '-' + shortid.encode(article._id) %>
+      <tr>
+        <td></td>
+        <td class="title"><a href="<%= menu.current.path %>/<%= pagename %>"><%= article.title %></a></td>
+        <td class="writer"><%= article.user.username %></td>
+        <td class="created"><%= moment(article.created).format("llll") %></td>
+      </tr>
+      <% }); %>
+  </table>
 
-<% include ../partials/pagination %>
+  <% include ../partials/pagination %>
+</div>

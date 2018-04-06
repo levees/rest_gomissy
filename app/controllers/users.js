@@ -50,7 +50,7 @@ exports.create = async(function* (req, res) {
   user.provider = 'local';
   // console.log(user);
   try {
-    user.activation.authCode = user.encryptAuthCode();
+    // user.activation.authCode = user.encryptAuthCode();
     yield user.save();
 
     // send email confirmation

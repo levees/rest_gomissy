@@ -14,8 +14,8 @@ const defaults = {
   baseUrl: 'www.goodfriends.co',
   root: path.join(__dirname, '..'),
   secret: 'goodfriends',
-  // db: 'mongodb://appadmin:appadmin0328@ds143900.mlab.com:43900/heroku_dkh2tkbf'
-  db: 'mongodb://localhost/goodfriends',
+  db: 'mongodb://appadmin:appadmin0328@ds143900.mlab.com:43900/heroku_dkh2tkbf',
+  // db: 'mongodb://localhost/goodfriends',
   notifier: {
     service: 'postmark', // or 'sendgrid'
     APN: false,

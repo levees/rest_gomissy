@@ -1,1 +1,23 @@
-show
+<% layout('/layout') -%>
+
+<div class="col s12 m12 l12">
+  <table class="board-detail">
+    <thead>
+      <tr>
+        <th><%= article.title %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="info right">
+          <%= article.user.username %>
+          <%= moment(article.created_at).format("llll") %>
+          <%= article.__v %>
+        </td>
+      </tr>
+      <tr>
+        <td><%- article.body %></td>
+      </tr>
+  </table>
+
+</div>

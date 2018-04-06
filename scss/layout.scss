@@ -457,6 +457,26 @@ table.board-list {
   }
 }
 
+table.board-detail {
+  thead {
+    tr {
+      th {
+        padding: 5px;
+        font-size: 1.4rem;
+      }
+    }
+  }
+  tbody {
+    tr {
+      td {
+        &.info {
+          padding: 10px;
+        }
+      }
+    }
+  }
+}
+
 #bg-slider{
   margin: 0;
   padding: 0;
