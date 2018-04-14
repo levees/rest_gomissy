@@ -1,26 +1,66 @@
 <% layout('/layout') -%>
 
-<div class="col s12 m12 l12">
-  <table class="board-list highlight">
-    <thead>
-      <tr>
-        <th></th>
-        <th class="title">Subject</th>
-        <th class="writer">Writer</th>
-        <th class="created">created</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% articles.forEach(function(article) { %>
-      <% var pagename = article.title.split(' ').join('-') + '-' + shortid.encode(article._id) %>
-      <tr>
-        <td></td>
-        <td class="title"><a href="<%= menu.current.path %>/<%= pagename %>"><%= article.title %></a></td>
-        <td class="writer"><%= article.user.username %></td>
-        <td class="created"><%= moment(article.created).format("llll") %></td>
-      </tr>
-      <% }); %>
-  </table>
+<% if (menu.current.path != 'events') { %>
 
-  <% include ../partials/pagination %>
-</div>
+  <div class="row">
+    <table class="board-list highlight bordered">
+      <thead>
+        <tr style="border-bottom: 1px solid #ccc;">
+          <th></th>
+          <th class="title">Subject</th>
+          <th class="writer">Writer</th>
+          <th class="created">created</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% articles.forEach(function(article) { %>
+        <% var pagename = article.title.split(' ').join('-') + '-' + shortid.encode(article._id) %>
+        <tr>
+          <td></td>
+          <td class="title"><a href="<%= menu.current.path %>/<%= pagename %>"><%= article.title %></a></td>
+          <td class="writer"><%= article.user.username %></td>
+          <td class="created"><%= moment(article.created_at).format("llll") %></td>
+        </tr>
+        <% }); %>
+    </table>
+
+    <% include ../partials/pagination %>
+  </div>
+
+<% } else { %>
+
+  <ul class="event-list">
+    <% articles.forEach(function(article) { %>
+    <%
+      var pagename = article.title.split(' ').join('-') + '-' + shortid.encode(article._id);
+      var event_at = (article.event.period == 1) ? moment(article.event.begin_at).format("LL") : moment(article.event.begin_at).format("LL") + ' to ' + moment(article.event.begin_at).add(article.event.period, 'days').format("LL");
+      var event_date = moment(article.event.begin_at);
+      var today = moment().format("YYYY-MM-DD");
+      if (event_date.isSame(today))
+        days_left = 'Today';
+      else
+        days_left = event_date.diff(today, 'days') + ' Day(s) left';
+
+      max_attendee = (article.event.limit == 0) ? '' : '(' + article.event.limit + ' Members allows)';
+    %>
+    <li class="event">
+      <div class="row">
+        <div class="col s12 m8">
+          <p class="event_at"><%= event_at %></p>
+          <h5><a href="<%= menu.current.path %>/<%= pagename %>"><%= article.title %></a></h5>
+          <p class="event-addr"><i class="material-icons">location_on</i> <%= article.event.address %> (<a href="https://www.google.com/maps/dir/<%= article.event.place.replace(' ', '+') %>" target="_map">map</a>)</p>
+        </div>
+        <div class="event-meta col m4 s12">
+          <p class="left-time"><%= days_left %></p>
+          <p class="event-time">Period : <%= article.event.period %> days</p>
+          <p class="rsvp-count">Max of people : <%= article.event.attendee.length %> Attendee <%= max_attendee %></p>
+        </div>
+      </div>
+    </li>
+    <% }); %>
+  </ul>
+
+    <% include ../partials/pagination %>
+  </div>
+
+<% } %>

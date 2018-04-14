@@ -45,8 +45,25 @@
 			"title": "제목",
 			"content": "내용",
 			"tags": "태그",
+      "place": "장소",
+			"address": "주소",
+			"date": "날자",
+			"period": "기간",
+			"price": "금액",
+			"limit": "정원",
 			"submit": "확인",
 			"cancel": "취소"
+    },
+		"placeholder": {
+			"title": "제목",
+			"content": "내용",
+			"tags": "태그",
+			"place": "장소 이름",
+			"address": "주소",
+			"date": "날자",
+			"period": "체류 기간",
+			"price": "금액",
+			"limit": "최대 인원수"
 		}
   }
 }

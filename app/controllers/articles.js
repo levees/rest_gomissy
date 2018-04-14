@@ -11,6 +11,7 @@ const config = require('../../config/config');
 const func = require('../../config/function');
 const { respond, respondOrRedirect } = require('../../config/respond');
 const Article = mongoose.model('Article');
+const Event = mongoose.model('Event');
 const assign = Object.assign;
 // const multer = require('multer')
 // const upload = multer({ dest: 'uploads/' })
@@ -117,6 +118,14 @@ exports.create = async(function* (req, res) {
         }, 422);
     }
     else {
+      if (res.locals.menu.current.path == 'events') {
+        const event = new Event(only(req.body, 'place address begin_at period price limit'));
+        console.log(event)
+        event.save();
+        article.event = event._id;
+        article.save();
+      }
+
       var shortid = shortId({isFullId: true});
       var pagename = article.title.split(' ').join('-') + '-' + shortid.encode(article._id)
       return respondOrRedirect({ req, res }, `/${res.locals.menu.parent.path}/${res.locals.menu.current.path}/${pagename}`, article, {

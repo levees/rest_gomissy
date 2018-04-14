@@ -4,9 +4,42 @@
   <form name="frm_post" method="post" action="<%= path %>" calss="">
     <div class="row">
       <div class="input-field col s12">
-        <input id="title" name="title" type="text" class="validate" value="" required />
+        <input id="title" name="title" type="text" class="validate" value="" required placeholder="<%= i18n.__('board.placeholder.title') %>" />
         <label for="title" class="force-active"><%= i18n.__('board.post.title') %></label>
       </div>
+
+    <% if (menu.current.path == 'events') { %>
+      <div>
+        <div class="input-field col s6 pad-right">
+          <input id="place" name="place" type="text" class="validate" value="" placeholder="<%= i18n.__('board.placeholder.place') %>" />
+          <label for="place" class="force-active"><%= i18n.__('board.post.place') %></label>
+        </div>
+        <div class="input-field col s6 pad-right">
+          <input id="address" name="address" type="text" class="validate" value="" placeholder="<%= i18n.__('board.placeholder.address') %>" />
+          <label for="address" class="force-active"><%= i18n.__('board.post.address') %></label>
+        </div>
+      </div>
+      <div>
+        <div class="input-field col s3 pad-right">
+          <input id="begin_at" name="begin_at" type="text" class="datepicker" value="" placeholder="<%= i18n.__('board.placeholder.date') %>" />
+          <label for="begin_at" class="force-active"><%= i18n.__('board.post.date') %></label>
+        </div>
+        <div class="input-field col s3 pad-right">
+          <input id="period" name="period" type="number" value="" min="0" max="10" step="1" class="validate" value="" placeholder="<%= i18n.__('board.placeholder.period') %>" />
+          <label for="period" class="force-active"><%= i18n.__('board.post.period') %></label>
+        </div>
+        <div class="input-field col s3 pad-right">
+
+          <input id="price" name="price" type="number" value="" min="0" step="1" class="validate" placeholder="<%= i18n.__('board.placeholder.price') %>" />
+          <label for="price" class="force-active"><%= i18n.__('board.post.price') %></label>
+        </div>
+        <div class="input-field col s3 pad-right">
+          <input id="limit" name="limit" type="number" value="" min="0" max="10" step="1" class="validate" value="" placeholder="<%= i18n.__('board.placeholder.limit') %>" />
+          <label for="limit" class="force-active"><%= i18n.__('board.post.limit') %></label>
+        </div>
+      </div>
+    <% } %>
+
 
       <div class="input-field col s12">
         <textarea id="body" name="body" class="" required></textarea>
@@ -14,7 +47,7 @@
       </div>
 
       <div class="input-field col s12">
-        <input id="tags" name="tags" type="text" />
+        <input id="tags" name="tags" type="text" placeholder="<%= i18n.__('board.placeholder.tags') %>"/>
         <label for="tags" class="force-active"><%= i18n.__('board.post.tags') %></label>
       </div>
 

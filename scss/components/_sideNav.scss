@@ -1,18 +1,17 @@
-.side-nav {
-  // position: fixed;
-  // width: 240px;
-  // left: 0;
-  // top: 0;
+.sidenav {
+  position: fixed;
+  width: 300px;
+  left: 0;
+  top: 0;
   margin: 0;
   transform: translateX(-100%);
   height: 100%;
-  // height: calc(100% + 60px);
-  height: calc(100% - 50px);
+  height: calc(100% + 60px);
   height: -moz-calc(100%); //Temporary Firefox Fix
   padding-bottom: 60px;
   background-color: $sidenav-bg-color;
   z-index: 999;
-  // overflow-y: auto;
+  overflow-y: auto;
   will-change: transform;
   backface-visibility: hidden;
   transform: translateX(-105%);
@@ -46,10 +45,9 @@
     font-weight: 500;
     height: $sidenav-item-height;
     line-height: $sidenav-line-height;
-    // padding: 0 ($sidenav-padding * 2);
-    padding: 0 ($sidenav-padding);
+    padding: 0 ($sidenav-padding * 2);
 
-    &:not(.profile-wrap):hover { background-color: rgba(0,0,0,.05);}
+    &:hover { background-color: rgba(0,0,0,.05);}
 
     &.btn, &.btn-large, &.btn-flat, &.btn-floating {
       margin: 10px 15px;
@@ -70,7 +68,7 @@
       float: left;
       height: $sidenav-item-height;
       line-height: $sidenav-line-height;
-      margin: 0 ($sidenav-padding / 2) 0 0;
+      margin: 0 ($sidenav-padding * 2) 0 0;
       width: $sidenav-item-height / 2;
       color: rgba(0,0,0,.54);
     }
@@ -94,8 +92,7 @@
     line-height: $sidenav-line-height;
   }
 
-  .user-view,
-  .userView {
+  .user-view {
     position: relative;
     padding: ($sidenav-padding * 2) ($sidenav-padding * 2) 0;
     margin-bottom: $sidenav-padding / 2;
@@ -146,6 +143,11 @@
 
 // Touch interaction
 .drag-target {
+  // Right Align
+  &.right-aligned {
+    right: 0;
+  }
+
   height: 100%;
   width: 10px;
   position: fixed;
@@ -154,23 +156,23 @@
 }
 
 
-// Fixed side-nav shown
-.side-nav.fixed {
-  left: 0;
-  transform: translateX(0);
-  position: fixed;
-
+// Fixed Sidenav shown
+.sidenav.sidenav-fixed {
   // Right Align
   &.right-aligned {
     right: 0;
     left: auto;
   }
+
+  left: 0;
+  transform: translateX(0);
+  position: fixed;
 }
 
-// Fixed sideNav hide on smaller
+// Fixed Sidenav hide on smaller
 @media #{$medium-and-down} {
-  .side-nav {
-    &.fixed {
+  .sidenav {
+    &.sidenav-fixed {
       transform: translateX(-105%);
 
       &.right-aligned {
@@ -178,42 +180,37 @@
       }
     }
 
-    a {
+    > a {
       padding: 0 $sidenav-padding;
     }
 
-    .user-view,
-    .userView {
+    .user-view {
       padding: $sidenav-padding $sidenav-padding 0;
     }
   }
 }
 
 
-.side-nav .collapsible-body > ul:not(.collapsible) > li.active,
-.side-nav.fixed .collapsible-body > ul:not(.collapsible) > li.active {
-  // background-color: $primary-color;
-  background-color: transparent;
+.sidenav .collapsible-body > ul:not(.collapsible) > li.active,
+.sidenav.sidenav-fixed .collapsible-body > ul:not(.collapsible) > li.active {
+  background-color: $primary-color;
   a {
-    // color: $sidenav-bg-color;
-    // color: $sidenav-active-color;
-    color: $link-color;
+    color: $sidenav-bg-color;
   }
 }
-.side-nav .collapsible-body {
+.sidenav .collapsible-body {
   padding: 0;
 }
 
 
-#sidenav-overlay {
+.sidenav-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-
+  opacity: 0;
   height: 120vh;
   background-color: rgba(0,0,0,.5);
   z-index: 997;
-
-  will-change: opacity;
+  display: none;
 }

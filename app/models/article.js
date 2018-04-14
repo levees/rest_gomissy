@@ -12,7 +12,6 @@ const notify = require('../mailer');
 // const imagerConfig = require(config.root + '/config/imager.js');
 
 const Schema = mongoose.Schema;
-
 const getTags = tags => tags.join(',');
 const setTags = tags => tags.split(',');
 
@@ -63,6 +62,11 @@ const ArticleSchema = new Schema({
     trim: true
   },
   comments: [CommentSchema],
+  event: {
+    type: Schema.ObjectId,
+    ref: 'Event',
+    index: true
+  },
   tags: {
     type: [],
     get: getTags,
@@ -80,11 +84,53 @@ const ArticleSchema = new Schema({
 });
 
 /**
+ * Event Schema
+ */
+
+const EventSchema = new Schema({
+  place: {
+    type: String,
+    default: ''
+  },
+  address: {
+    type: String,
+    default: ''
+  },
+  location: {
+    lattitude: { type: Number },
+    longitude: { type: Number }
+  },
+  begin_at: {
+    type: Date
+  },
+  period: {
+    type: Number
+  },
+  price: {
+    type: Number,
+    default: 0
+  },
+  limit: {
+    type: Number
+  },
+  attendee: [{
+    user: {
+      type: Schema.ObjectId,
+      ref: 'User',
+      index: true
+    }
+  }]
+});
+
+/**
  * Validations
  */
 
 ArticleSchema.path('title').required(true, 'Article title cannot be blank');
 ArticleSchema.path('body').required(true, 'Article body cannot be blank');
+EventSchema.path('address').required(true, 'Address cannot be blank');
+EventSchema.path('begin_at').required(true, 'Event date cannot be blank');
+
 
 /**
  * Pre-remove hook
@@ -183,7 +229,8 @@ ArticleSchema.statics = {
     const page = options.page || 0;
     const limit = options.limit || 30;
     return this.find(criteria)
-      .populate('user', 'name username')
+      .populate('event')
+      .populate('user')
       .sort({ createdAt: -1 })
       .limit(limit)
       .skip(limit * page)
@@ -192,3 +239,5 @@ ArticleSchema.statics = {
 };
 
 mongoose.model('Article', ArticleSchema);
+mongoose.model('Event',   EventSchema);
+mongoose.model('Comment', CommentSchema);

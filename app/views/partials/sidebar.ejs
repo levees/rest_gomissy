@@ -34,9 +34,10 @@
   </li>
   <li class="bold"><a href="/" class="waves-effect waves-teal"><i class="material-icons">home</i> <%= i18n.__('sidebar.home') %></a></li>
   <li class="no-padding">
-    <ul class="collapsible collapsible-accordion">
-      <li class="bold"><a class="collapsible-header waves-effect waves-teal <%= (menu.parent.path == 'board') ? 'active' : '' %>"><i class="material-icons">landscape</i> <%= i18n.__('sidebar.tracking.default') %></a>
-        <div class="collapsible-body" style="display: none;">
+    <ul class="collapsible">
+      <li class="bold <%= (menu.parent.path == 'board') ? 'active' : '' %>">
+        <a class="collapsible-header waves-effect waves-teal"><i class="material-icons">landscape</i> <%= i18n.__('sidebar.tracking.default') %></a>
+        <div class="collapsible-body" style="<%= (menu.parent.path == 'board') ? 'display:block;' : '' %>">
           <ul>
             <li class="sub-item <%= (menu.current.path == 'notices') ? 'active' : '' %>"><a href="/board/notices"><%= i18n.__('sidebar.tracking.notice') %><span class="new badge"></span></a></li>
             <li class="sub-item <%= (menu.current.path == 'events')  ? 'active' : '' %>"><a href="/board/events"><%= i18n.__('sidebar.tracking.event') %></a></li>

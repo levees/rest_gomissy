@@ -45,8 +45,26 @@
 			"title": "Title",
 			"content": "Content",
 			"tags": "Tags",
+			"place": "Place Name",
+			"address": "Address",
+			"date": "Date",
+			"period": "Period",
+			"price": "Price",
+			"limit": "Limit",
 			"submit": "Submit",
 			"cancel": "Cancel"
+		},
+		"placeholder": {
+			"title": "Title",
+			"content": "Content",
+			"tags": "Tags",
+			"place": "Place Name",
+			"address": "Address",
+			"date": "Event date",
+			"period": "Length of stay",
+			"price": "Price",
+			"limit": "Max num of people"
 		}
+
 	}
 }
