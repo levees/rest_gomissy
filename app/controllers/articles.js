@@ -119,7 +119,8 @@ exports.create = async(function* (req, res) {
     }
     else {
       if (res.locals.menu.current.path == 'events') {
-        const event = new Event(only(req.body, 'place address begin_at period price limit'));
+        const event = new Event(only(req.body, 'place address period price limit'));
+        event.begin_at = moment(req.body.begin_date + ' ' + req.body.begin_time);
         console.log(event)
         event.save();
         article.event = event._id;

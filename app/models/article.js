@@ -213,6 +213,7 @@ ArticleSchema.statics = {
   load: function (_id) {
     return this.findOne({ _id })
       .populate('user', 'name email username')
+      .populate('event')
       .populate('comments.user')
       .exec();
   },

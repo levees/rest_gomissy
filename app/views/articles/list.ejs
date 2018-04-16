@@ -36,17 +36,20 @@
       var event_at = (article.event.period == 1) ? moment(article.event.begin_at).format("LL") : moment(article.event.begin_at).format("LL") + ' to ' + moment(article.event.begin_at).add(article.event.period, 'days').format("LL");
       var event_date = moment(article.event.begin_at);
       var today = moment().format("YYYY-MM-DD");
+      var date_diff = event_date.diff(today, 'days');
       if (event_date.isSame(today))
         days_left = 'Today';
+      else if (date_diff < 0)
+        days_left = "Expired";
       else
         days_left = event_date.diff(today, 'days') + ' Day(s) left';
 
       max_attendee = (article.event.limit == 0) ? '' : '(' + article.event.limit + ' Members allows)';
     %>
-    <li class="event">
-      <div class="row">
+    <li>
+      <h6><%= event_at %></h6>
+      <div class="row event">
         <div class="col s12 m8">
-          <p class="event_at"><%= event_at %></p>
           <h5><a href="<%= menu.current.path %>/<%= pagename %>"><%= article.title %></a></h5>
           <p class="event-addr"><i class="material-icons">location_on</i> <%= article.event.address %> (<a href="https://www.google.com/maps/dir/<%= article.event.place.replace(' ', '+') %>" target="_map">map</a>)</p>
         </div>

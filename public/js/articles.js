@@ -10,4 +10,5 @@ $(document).ready(function() {
   // if ($('#content #begin_at').is('#body'))
   //   $('#content #begin_at').datepicker();
   $('.datepicker').datepicker();
+  $('.timepicker').timepicker();
 });

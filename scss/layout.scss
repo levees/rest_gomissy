@@ -490,14 +490,15 @@ $animation_time: 8s;
 }
 
 .event-list {
-  li.event {
-    border: 1px solid #eee;
-    margin: 10px 0;
+  .event {
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    margin: 10px 0 20px;
     padding: 10px;
     clear: left;
     position: relative;
 
-    h5 { margin-left: 5px; margin-bottom: 5px; font-weight: 500; font-size: 1.5em; }
+    h5 { margin: 5px 0; font-weight: 600; font-size: 1.5em; }
     p { margin: 0; padding: 0; clear:left; }
     .location { font-size: 1.2em; color: lighten($font_color, 10%); }
     .event-addr {
@@ -521,8 +522,10 @@ $animation_time: 8s;
       pointer-events: none; /* so the text is still selectable */
     }
     .event-meta {
+      font-size: .92em;
+
       p { padding: 0; }
-      .event-date { font-weight: 500; font-size: 1.2em; color: lighten($font_color, 10%); }
+      .event-date { font-weight: 500; color: lighten($font_color, 10%); }
       .event-rsvp {
         margin: 10px 0;
         .btn {
@@ -556,6 +559,13 @@ $animation_time: 8s;
       }
     }
   }
+}
+
+.event-detail {
+  width: 100%;
+
+  .main { width: 60%; }
+  .desc { width: 40%; }
 }
 
 #bg-slider{

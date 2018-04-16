@@ -21,7 +21,8 @@
       </div>
       <div>
         <div class="input-field col s3 pad-right">
-          <input id="begin_at" name="begin_at" type="text" class="datepicker" value="" placeholder="<%= i18n.__('board.placeholder.date') %>" />
+          <input id="begin_at" name="begin_date" type="text" class="datepicker" style="width:45%; float:left;" value="" placeholder="<%= i18n.__('board.placeholder.date') %>" />
+          <input name="begin_time" type="text" class="timepicker" style="width:45%; float:right;" value="" />
           <label for="begin_at" class="force-active"><%= i18n.__('board.post.date') %></label>
         </div>
         <div class="input-field col s3 pad-right">
