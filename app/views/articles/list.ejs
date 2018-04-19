@@ -40,7 +40,7 @@
       if (event_date.isSame(today))
         days_left = 'Today';
       else if (date_diff < 0)
-        days_left = "Expired";
+        days_left = "Past Event";
       else
         days_left = event_date.diff(today, 'days') + ' Day(s) left';
 

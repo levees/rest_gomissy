@@ -24,38 +24,107 @@
 
   </div>
 
-<% } else { %>
+<% } else {
+  var event_at = (article.event.period == 1) ?
+    moment(article.event.begin_at).format("LL") :
+    moment(article.event.begin_at).format("LL") + ' to ' + moment(article.event.begin_at).add(article.event.period, 'days').format("LL");
+  var event_date = moment(article.event.begin_at);
+  var today = moment().format("YYYY-MM-DD");
+  var date_diff = event_date.diff(today, 'days');
+  if (event_date.isSame(today))
+    event_at = 'Today';
+  else if (date_diff < 0)
+    event_at = "Past Event at " + event_at;
+  else
+    event_at = event_at
 
-  <div class="row">
-    <div class="col s12 m8">
-      <p><%= moment(article.event.begin_at).format("LLLL") %></p>
-      <h5><%= article.title %></h5>
-    </div>
-    <div class="col s12 m4">
-      <p><b>Are you going?</b> <small><%= article.event.attendee.length %> people going.</small></p>
-      <div>
-        <button class="btn btn-primary">√</button>
-        <button class="btn btn-primary">X</button>
+
+%>
+
+  <div class="event-detail">
+    <div class="row event-header">
+      <div class="col s12 m8">
+        <div class="event-at"><%= event_at %></div>
+        <h5 class="title"><%= article.title %></h5>
+        <p class="event-addr">
+          <i class="material-icons">location_on</i> <%= article.event.address %> (<a href="https://www.google.com/maps/dir/<%= article.event.place.replace(' ', '+') %>" target="_map">map</a>)
+        </p>
+      </div>
+      <div class="col s12 m4">
+        <div class="event-info">
+          <% if (event_date.isSame(today)) { %>
+            Today
+          <% } else if (date_diff < 0) { %>
+            <p><b>This Event is past</b> <%= article.event.attendee.length %> people went.</p>
+          <% } else { %>
+            <p><b>Are you going?</b> <%= article.event.attendee.length %> people going.</p>
+            <button class="btn btn-primary">Yes</button>
+            <button class="btn btn-cancel">No</button>
+          <% } %>
+        </div>
       </div>
     </div>
-    <div class="col s12">
-      <p class="event-addr"><i class="material-icons">location_on</i> <%= article.event.address %> (<a href="https://www.google.com/maps/dir/<%= article.event.place.replace(' ', '+') %>" target="_map">map</a>)</p>
-    </div>
-    <!--
-    <div class="col s12">
-      <p>Attendee</p>
-      <div>
-        <div class="profile-image"><img src="/images/profile/1.jpg" alt="Admin"></div>
+
+    <div class="row event-body">
+      <div class="col s12">
+        <%- article.body %>
       </div>
     </div>
-    -->
-  </div>
 
-  <div class="row">
-    <div class="col s12">
-      <%- article.body %>
+    <div class="row event-attendee">
+      <div class="col s12">
+        <h5>Attendee</h5>
+        <div class="attendees">
+          <div class="attendee card">
+            <div class="card-image profile-image">
+              <img src="/images/profile/1.jpg" alt="username">
+            </div>
+            <p class="card-content">Admin</p>
+          </div>
+          <div class="attendee card">
+            <div class="card-image profile-image">
+              <img src="/images/profile/2.jpg" alt="username">
+            </div>
+            <p class="card-content">Administrator</p>
+          </div>
+          <div class="attendee card">
+            <div class="card-image profile-image">
+              <img src="/images/profile/3.jpg" alt="username">
+            </div>
+            <p class="card-content">난나야</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-
 
 <% } %>
+
+<div class="row">
+  <div class="col s12 m12 l12">
+    <h5>Comments</h5>
+    <ul class="comment-list">
+      <li>
+        <div class="comment">
+          <p class="profile-image"><img src="/images/profile/1.jpg" alt="username"></p>
+          <div class="comment-header">
+            <h6>Admin</h6>
+          </div>
+          <div class="comment-body">
+            <div class="comment-content">
+            comments
+            </div>
+            <div class="comment-action">
+              <span><a href="#">Reply</a></span>
+              <span><a href="#">Edit</a></span>
+              <span><a href="#">Like</a></span>
+              <span><a href="#">Delete</a></span>
+              <span>Mar 14,2018 03:33:33 PM</span>
+            </div>
+          </div>
+        </div>
+
+      </li>
+    </ul>
+  </div>
+</div>

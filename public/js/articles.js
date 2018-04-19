@@ -11,4 +11,5 @@ $(document).ready(function() {
   //   $('#content #begin_at').datepicker();
   $('.datepicker').datepicker();
   $('.timepicker').timepicker();
+  $('.tooltipped').tooltip();
 });
