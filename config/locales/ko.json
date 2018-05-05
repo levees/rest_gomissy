@@ -44,6 +44,7 @@
 		"post": {
 			"title": "제목",
 			"content": "내용",
+      "writer": "글쓴이",
 			"tags": "태그",
       "place": "장소",
 			"address": "주소",
@@ -52,7 +53,15 @@
 			"price": "금액",
 			"limit": "정원",
 			"submit": "확인",
-			"cancel": "취소"
+			"cancel": "취소",
+      "going": "참가 인원",
+      "person": "명",
+      "day": "일",
+      "allows": "최대 %s 명",
+      "unlimite": "무제한",
+      "left_day": "%s 일 남음",
+      "past_event": "지난 산행",
+      "today_event": "산행중"
     },
 		"placeholder": {
 			"title": "제목",
@@ -63,7 +72,8 @@
 			"date": "날자",
 			"period": "체류 기간",
 			"price": "금액",
-			"limit": "최대 인원수"
+			"limit": "최대 인원수(0:무제한)"
 		}
+
   }
 }

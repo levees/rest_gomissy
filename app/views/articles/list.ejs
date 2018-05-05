@@ -7,9 +7,9 @@
       <thead>
         <tr style="border-bottom: 1px solid #ccc;">
           <th></th>
-          <th class="title">Subject</th>
-          <th class="writer">Writer</th>
-          <th class="created">created</th>
+          <th class="title"><%= i18n.__('board.post.title') %></th>
+          <th class="writer"><%= i18n.__('board.post.writer') %></th>
+          <th class="created"><%= i18n.__('board.post.date') %></th>
         </tr>
       </thead>
       <tbody>
@@ -38,13 +38,13 @@
       var today = moment().format("YYYY-MM-DD");
       var date_diff = event_date.diff(today, 'days');
       if (event_date.isSame(today))
-        days_left = 'Today';
+        days_left = i18n.__('board.post.today_event');
       else if (date_diff < 0)
-        days_left = "Past Event";
+        days_left = i18n.__('board.post.past_event');
       else
-        days_left = event_date.diff(today, 'days') + ' Day(s) left';
+        days_left = i18n.__('board.post.left_day', event_date.diff(today, 'days'));
 
-      max_attendee = (article.event.limit == 0) ? '' : '(' + article.event.limit + ' Members allows)';
+      max_attendee = (article.event.limit == 0) ? '' : '(' + i18n.__('board.post.allows', article.event.limit) + ')';
     %>
     <li>
       <h6><%= event_at %></h6>
@@ -55,8 +55,8 @@
         </div>
         <div class="event-meta col m4 s12">
           <p class="left-time"><%= days_left %></p>
-          <p class="event-time">Period : <%= article.event.period %> days</p>
-          <p class="rsvp-count">Max of people : <%= article.event.attendee.length %> Attendee <%= max_attendee %></p>
+          <p class="event-time"><%= i18n.__('board.post.period') %> : <%= article.event.period %> <%= i18n.__('board.post.day') %></p>
+          <p class="rsvp-count"><%= i18n.__('board.post.going') %> : <%= article.event.attendee.length %> <%= i18n.__('board.post.person') %> <%= max_attendee %></p>
         </div>
       </div>
     </li>

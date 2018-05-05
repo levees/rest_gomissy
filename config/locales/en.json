@@ -44,6 +44,7 @@
 		"post": {
 			"title": "Title",
 			"content": "Content",
+      "writer": "Writer",
 			"tags": "Tags",
 			"place": "Place Name",
 			"address": "Address",
@@ -52,7 +53,15 @@
 			"price": "Price",
 			"limit": "Limit",
 			"submit": "Submit",
-			"cancel": "Cancel"
+			"cancel": "Cancel",
+      "going": "Going",
+      "person": "Attendee",
+      "day": "Day(s)",
+      "allows": "%s Members allows",
+      "unlimite": "unlimite",
+      "left_day": "%s Day(s) left",
+      "past_event": "Past Event",
+      "today_event": "Today"
 		},
 		"placeholder": {
 			"title": "Title",
@@ -63,7 +72,7 @@
 			"date": "Event date",
 			"period": "Length of stay",
 			"price": "Price",
-			"limit": "Max num of people"
+			"limit": "Max num of people(0,unlimited)"
 		}
 
 	}
