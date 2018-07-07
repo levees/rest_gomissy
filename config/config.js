@@ -14,7 +14,8 @@ const defaults = {
   baseUrl: 'www.goodfriends.co',
   root: path.join(__dirname, '..'),
   secret: 'goodfriends',
-  db: 'mongodb://appadmin:appadmin0328@ds143900.mlab.com:43900/heroku_dkh2tkbf',
+  db: 'mongodb://54.215.185.175/goodfriends_dev',
+  // db: 'mongodb://appadmin:appadmin0328@ds143900.mlab.com:43900/heroku_dkh2tkbf',
   // db: 'mongodb://localhost/goodfriends',
   notifier: {
     service: 'postmark', // or 'sendgrid'
@@ -29,15 +30,17 @@ const defaults = {
     parseApiKey: 'MASTER_KEY'
   },
   smtp: {
-    service: "Gmail",
-    host: 'smtp.gmail.com',
-    //secureConnection: true,
-    //port: 465,
+    // service: "Gmail",
+    // host: 'smtp.gmail.com',
+    service: "Zoho",
+    host: 'smtp.zoho.com',
+    secureConnection: true,
+    port: 465,
     auth: {
-      user: 'reafy.team@gmail.com',
-      pass: 'Reafy0426'
-      //user: "noreply@gmail.com",
-      //pass: "gomissyinc"
+      // user: 'reafy.team@gmail.com',
+      // pass: 'Reafy0426'
+      user: "noreply@goodfriends.co",
+      pass: "g00dfr1end$"
     }
   }
 };

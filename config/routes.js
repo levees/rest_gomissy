@@ -36,7 +36,8 @@ module.exports = function (app, passport) {
   });
 
   app.get('', home.index);
-  app.get('/test/:id/:sid:format(.json)?', home.test);
+  app.get('/test', home.test);
+  // app.get('/test/:id/:sid:format(.json)?', home.test);
 
   // app.get('/user/send', users.send)
 
