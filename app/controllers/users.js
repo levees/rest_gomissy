@@ -50,28 +50,25 @@ exports.create = async(function* (req, res) {
   user.provider = 'local';
   // console.log(user);
   try {
-    // user.activation.authCode = user.encryptAuthCode();
+    user.activation.authCode = user.encryptAuthCode();
     yield user.save();
 
     // send email confirmation
     mailer.confirmation(user, function(err) {
-      if (err) return res.render('users/error', { signup_errors: err.errors, login_errors: '', user: user })
-      return res.render('users/complete', { title:'SignUp Complete', signup_errors: '', login_errors: '', user: user });
+      if (err) return res.json({ signup_errors: err.errors, login_errors: '', user: user })
+      return res.json({ title:'SignUp Complete', signup_errors: '', login_errors: '', user: user });
     });
 
-    req.logIn(user, err => {
-      if (err) req.flash('info', 'Sorry! We are not able to log you in!');
-      return res.redirect('/');
-    });
+    // req.logIn(user, err => {
+    //   if (err) req.flash('info', 'Sorry! We are not able to log you in!');
+    //   return res.redirect('/');
+    // });
   } catch (err) {
     console.log(err)
     const errors = Object.keys(err.errors)
       .map(field => err.errors[field].message);
 
-    respond(res, 'users/signup', {
-      userinfo: user,
-      error: errors
-    });
+    res.json({ userinfo: user, error: errors });
   }
 });
 

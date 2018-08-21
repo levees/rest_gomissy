@@ -1,8 +1,8 @@
 'use strict';
 
 /*
- * Goodfriends web application : nodejs, express, mongodb
- * Copyright(c) Goodfriends 2017 Bryan.Oh 
+ * Goodfriends web application : node.js, express, mongodb
+ * Copyright(c) Gomissy 2017 Bryan.Oh 
  * MIT Licensed
  */
 

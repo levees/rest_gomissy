@@ -46,11 +46,11 @@ module.exports = function (app, passport) {
     extension: 'json'
   })
   app.use(i18n.init());
-  app.use(function(req,res,next) {
-    var lang = req.headers["accept-language"].split('-')[0];
-    i18n.setLocale(lang);
-    next();
-  });
+  // app.use(function(req,res,next) {
+  //   var lang = req.headers["accept-language"].split('-')[0];
+  //   i18n.setLocale(lang);
+  //   next();
+  // });
 
   // adding the sass middleware
   app.use(

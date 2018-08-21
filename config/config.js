@@ -11,24 +11,23 @@ const path = require('path');
  */
 
 const defaults = {
-  baseUrl: 'www.goodfriends.co',
+  baseUrl: 'rest.gomissy.com',
   root: path.join(__dirname, '..'),
   secret: 'goodfriends',
-  db: 'mongodb://54.215.185.175/goodfriends_dev',
-  // db: 'mongodb://appadmin:appadmin0328@ds143900.mlab.com:43900/heroku_dkh2tkbf',
+  db: 'mongodb://54.215.185.175/gomissy_dev',
   // db: 'mongodb://localhost/goodfriends',
-  notifier: {
-    service: 'postmark', // or 'sendgrid'
-    APN: false,
-    email: true,
-    tplType: 'ejs', // if you want to use ejs as templating system
-    actions: ['activation', 'comment'],
-    tplPath: path.join(__dirname, '../app/mailer/templates'), //require('path').resolve(__dirname, './templates'),
-    key: 'SERVICE_KEY',
-    sendgridUser: 'SENDGRID_USER',
-    parseAppId: 'APP_ID',
-    parseApiKey: 'MASTER_KEY'
-  },
+  // notifier: {
+  //   service: 'postmark', // or 'sendgrid'
+  //   APN: false,
+  //   email: true,
+  //   tplType: 'ejs', // if you want to use ejs as templating system
+  //   actions: ['activation', 'comment'],
+  //   tplPath: path.join(__dirname, '../app/mailer/templates'), //require('path').resolve(__dirname, './templates'),
+  //   key: 'SERVICE_KEY',
+  //   sendgridUser: 'SENDGRID_USER',
+  //   parseAppId: 'APP_ID',
+  //   parseApiKey: 'MASTER_KEY'
+  // },
   smtp: {
     // service: "Gmail",
     // host: 'smtp.gmail.com',

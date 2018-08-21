@@ -14,7 +14,8 @@ const oAuthTypes = [
   'twitter',
   'facebook',
   'google',
-  'linkedin'
+  'linkedin',
+  'kakao'
 ];
 
 /**
@@ -47,9 +48,25 @@ const UserSchema = new Schema({
     lowercase: true,
     unique: true
   },
+  photo: { 
+    type: String, 
+    default: '' 
+  },
   mobile: {
     type: String,
     default: ''
+  },
+  location: {
+    zipcode: { type: String, required: true, validate: [/^[0-9]{5}$/i, '올바른 Zipcode를 입력하세요.'] },
+    city: { type: String, default: '' },
+    state: { type: String, default: '' },
+    country: { type: String, default: '' }
+  },
+  birth: { 
+    open:  { type: String, default: 'global' },
+    month: { type: String },
+    day:   { type: String },
+    year:  { type: String }
   },
   salt: {
     type: String,
@@ -67,10 +84,10 @@ const UserSchema = new Schema({
     type: String,
     default: ''
   },
-  // activation: {
-  //   authCode: String,
-  //   status: { type: Boolean, default: false }
-  // },
+  activation: {
+    authCode: String,
+    status: { type: Boolean, default: false }
+  },
   level: {
     type: Number,
     default: 101
@@ -211,20 +228,20 @@ UserSchema.methods = {
   },
 
 
-  // /**
-  //  * Encrypt authCode
-  //  *
-  //  * @param {String} authcode
-  //  * @return {String}
-  //  * @api public
-  //  */
-  //
-  // encryptAuthCode: function() {
-  //   var timestamp = new Date()
-  //   var stringVar = timestamp + ' '
-  //   var authCode = crypto.createHash('sha512').update(stringVar).update(salt).digest('base64');
-  //   return authCode;
-  // },
+  /**
+   * Encrypt authCode
+   *
+   * @param {String} authcode
+   * @return {String}
+   * @api public
+   */
+  
+  encryptAuthCode: function() {
+    var timestamp = new Date()
+    var stringVar = timestamp + ' '
+    var authCode = crypto.createHash('sha512').update(stringVar).update(this.salt).digest('base64');
+    return authCode;
+  },
 
   /**
    * Validation is not required if using OAuth
@@ -277,25 +294,25 @@ UserSchema.statics = {
     });
   },
 
-  // /**
-  //  * Update password by user
-  //  *
-  //  * @param {Object} options
-  //  * @param {Function} cb
-  //  * @api private
-  //
-  //
-  // update_password: function (id, cb) {
-  //   return this.findOne({_id: id}, function(err, user) {
-  //     if (err) return cb(err);
-  //
-  //     var token = crypto.randomBytes(64).toString('hex');
-  //     var error = user.update({ password_token: token }, function(err, resp) {
-  //       return err;
-  //     });
-  //     return cb(error, user, token);
-  //   });
-  // },
+  /**
+   * Update password by user
+   *
+   * @param {Object} options
+   * @param {Function} cb
+   * @api private
+  */
+  
+  update_password: function (id, cb) {
+    return this.findOne({_id: id}, function(err, user) {
+      if (err) return cb(err);
+  
+      var token = crypto.randomBytes(64).toString('hex');
+      var error = user.update({ password_token: token }, function(err, resp) {
+        return err;
+      });
+      return cb(error, user, token);
+    });
+  },
 
 };
 
