@@ -4,11 +4,14 @@
  * Module dependencies.
  */
 
+const _ = require('underscore');
 const mongoose = require('mongoose');
 const { wrap: async } = require('co');
-const { respond, respondOrRedirect } = require('../../config/respond');
+// const { respond, respondOrRedirect } = require('../../config/respond');
 const User = mongoose.model('User');
 const mailer = require('../mailer/email')
+const func = require('../../config/function')
+
 
 
 /**
@@ -49,8 +52,23 @@ exports.create = async(function* (req, res) {
   const user = new User(req.body);
   user.provider = 'local';
   // console.log(user);
+  var ipaddress = '73.223.236.152';
+  var geo = func.getLocation(ipaddress);
+  console.log(geo);
   try {
-    user.activation.authCode = user.encryptAuthCode();
+    _.extend(user, {
+      activation: {
+        authCode: user.encryptAuthCode()
+      },
+      location: {
+        zipcode: geo.postal,
+        city: geo.city,
+        state: geo.state,
+        country: geo.country,
+        latitude: geo.location.latitude,
+        longitude: geo.location.longitude
+      }
+    });
     yield user.save();
 
     // send email confirmation

@@ -48,9 +48,9 @@ const UserSchema = new Schema({
     lowercase: true,
     unique: true
   },
-  photo: { 
-    type: String, 
-    default: '' 
+  photo: {
+    type: String,
+    default: ''
   },
   mobile: {
     type: String,
@@ -60,9 +60,11 @@ const UserSchema = new Schema({
     zipcode: { type: String, required: true, validate: [/^[0-9]{5}$/i, '올바른 Zipcode를 입력하세요.'] },
     city: { type: String, default: '' },
     state: { type: String, default: '' },
-    country: { type: String, default: '' }
+    country: { type: String, default: '' },
+    latitude: { type: Number, default: 0 },
+    longitude: { type: Number, default: 0 }
   },
-  birth: { 
+  birth: {
     open:  { type: String, default: 'global' },
     month: { type: String },
     day:   { type: String },
@@ -235,7 +237,7 @@ UserSchema.methods = {
    * @return {String}
    * @api public
    */
-  
+
   encryptAuthCode: function() {
     var timestamp = new Date()
     var stringVar = timestamp + ' '
@@ -301,11 +303,11 @@ UserSchema.statics = {
    * @param {Function} cb
    * @api private
   */
-  
+
   update_password: function (id, cb) {
     return this.findOne({_id: id}, function(err, user) {
       if (err) return cb(err);
-  
+
       var token = crypto.randomBytes(64).toString('hex');
       var error = user.update({ password_token: token }, function(err, resp) {
         return err;

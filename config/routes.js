@@ -72,11 +72,13 @@ module.exports = function (app, passport) {
 
   // app.post('/auth', users.auth);
   app.post('/signup', users.create);
-  app.post('/login',
-    pauth('local', {
-      failureRedirect: '/login',
-      failureFlash: 'Invalid email or password.'
-    }), users.session);
+  app.post('/login', pauth('local'), users.session);
+
+  // app.post('/login',
+  //   pauth('local', {
+  //     failureRedirect: '/login',
+  //     failureFlash: 'Invalid email or password.'
+  //   }), users.session);
   app.post('/forgot', users.password_token);
   app.get('/password/reset', users.reset)
   app.post('/password/reset', users.update_password)
