@@ -1,6 +1,9 @@
-var maxmind = require('maxmind');
-var path = require('path');
-var geoDb = path.resolve(__dirname, '../dbs/GeoLite2-City.mmdb');
+const mongoose = require('mongoose');
+const maxmind = require('maxmind');
+const path = require('path');
+const geoDb = path.resolve(__dirname, '../dbs/GeoLite2-City.mmdb');
+
+const postal = mongoose.model('Postal', { postal: String, city: String, state: String, state_code: String, county: String, county_code: String, latitude: String, longitude: String, accuracy: Number });
 
 module.exports = {
   getIPAddr: function() {
@@ -17,7 +20,7 @@ module.exports = {
     return '0.0.0.0';
   },
 
-  getLocation: function(ipaddress) {
+  getLocation_IP: function(ipaddress) {
     var cityLookup = maxmind.openSync(geoDb);
     var ret = cityLookup.get(ipaddress);
     return {
@@ -33,5 +36,24 @@ module.exports = {
         timezone: ret.location.time_zone
       }
     }
+  },
+
+  getLocation_postal: function(zipcode) {
+    return postal.findOne({'postal': zipcode}).exec(function (err, obj) {
+      console.log(obj);
+      return {
+        city: obj.city,
+        state: obj.state_code,
+        country: obj.country,
+        country_code: obj.country_code,
+        postal: obj.postal,
+        location: {
+          latitude: obj.latitude,
+          longitude: obj.longitude,
+          accuracy: obj.accuracy,
+          timezone: null
+        }
+      };
+    });
   }
 };

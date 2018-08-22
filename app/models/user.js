@@ -57,7 +57,7 @@ const UserSchema = new Schema({
     default: ''
   },
   location: {
-    zipcode: { type: String, required: true, validate: [/^[0-9]{5}$/i, '올바른 Zipcode를 입력하세요.'] },
+    zipcode: { type: String },
     city: { type: String, default: '' },
     state: { type: String, default: '' },
     country: { type: String, default: '' },
@@ -69,6 +69,10 @@ const UserSchema = new Schema({
     month: { type: String },
     day:   { type: String },
     year:  { type: String }
+  },
+  provider: {
+    type: String,
+    default: ''
   },
   salt: {
     type: String,
@@ -82,12 +86,8 @@ const UserSchema = new Schema({
     type: String,
     default: ''
   },
-  provider: {
-    type: String,
-    default: ''
-  },
   activation: {
-    authCode: String,
+    token: String,
     status: { type: Boolean, default: false }
   },
   level: {
@@ -241,8 +241,9 @@ UserSchema.methods = {
   encryptAuthCode: function() {
     var timestamp = new Date()
     var stringVar = timestamp + ' '
-    var authCode = crypto.createHash('sha512').update(stringVar).update(this.salt).digest('base64');
-    return authCode;
+    var token = crypto.createHmac('sha1', this.salt).update(stringVar).digest('hex');
+    // var token = crypto.createHash('sha512').update(stringVar).update(this.salt).digest('base64');
+    return token;
   },
 
   /**
@@ -272,7 +273,7 @@ UserSchema.statics = {
     options.select = options.select || 'name username';
 
     return this.findOne(options.criteria)
-      .select(options.select)
+      // .select(options.select)
       .exec(cb);
   },
 

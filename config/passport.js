@@ -7,26 +7,13 @@ const config = require('./config');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const LocalStrategy = require('passport-local').Strategy;
-// const LdapStrategy = require('passport-ldapauth').Strategy
+const JWTStrategy = require('passport-jwt').Strategy;
 const User = mongoose.model('User');
 
 
 /**
  * Expose
  */
-
-// var ldap_options = {
-//   server: {
-//     url: 'ldap://kdc3.cdnetworks.kr:3268',
-//     bindDn: 'CN=fmslog_ldap,OU=System Account,OU=CDNetworks,dc=cdnetworks,dc=kr',
-//     bindCredentials: 'Fms#$admin',
-//     searchBase: 'dc=cdnetworks,dc=kr',
-//     searchFilter: '(&(objectcategory=person)(objectclass=user)(|(samaccountname={{username}})(mail={{username}})))'
-//   },
-//   usernameField: 'username',
-//   passwordField: 'password'
-// };
-
 module.exports = function (passport) {
 
   // serialize sessions
@@ -41,33 +28,22 @@ module.exports = function (passport) {
     });
   });
 
-
-  // passport.use(new LdapStrategy(ldap_options));
-
-  passport.use(new LocalStrategy(
-    {
+  passport.use(new LocalStrategy({
       usernameField: 'username',
       passwordField: 'password'
     },
     function (username, password, done) {
-      const options = {
-        criteria: { username: username },
-        select: 'name username email hashed_password salt'
-      };
-
-      User.findOne(options.criteria, function(err, user) {
-        // console.log(user);
+      User.findOne({ username: username }, function(err, user) {
         if (err) return done(err);
         if (!user) {
-          return done(null, false, { message: 'Unknown user' });
+          return done(null, false, { message: 'Incorrect username or password.' });
         }
         if (!user.authenticate(password)) {
-          return done(null, false, { message: 'Invalid password' });
+          return done(null, false, { message: 'Incorrect username or password.' });
         }
 
-        user.access_token = createJWT(user.username);
-        user.save();
-
+        var access_token = user.access_token = createJWT(user.username);
+        User.updateOne(user, {$set: {'access_token': access_token}}).exec();
         return done(null, user);
       });
     }

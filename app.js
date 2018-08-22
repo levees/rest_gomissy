@@ -51,8 +51,19 @@ function listen () {
 }
 
 function connect () {
-  var options = { promiseLibrary: require('bluebird'), server: { socketOptions: { keepAlive: 1 } } };
-  return mongoose.connect(config.db, options).connection;
+  console.log(config.db);
+  var options = { 
+    useNewUrlParser: true,
+    server: {
+      socketOptions: {
+        socketTimeoutMS: 0,
+        keepAlive: true
+      },
+      reconnectTries: 30
+    } 
+  };
+  mongoose.connect(config.db, options);
+  return mongoose.connection;
 }
 
 

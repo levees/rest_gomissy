@@ -31,34 +31,23 @@ const func = require('../../config/function')
 
 
 /**
- * Show sign up form
- */
-
-exports.signup = function (req, res) {
-  if (req.user)
-    res.redirect('/');
-  else
-    res.render('users/signup', {
-      title: 'Sign up',
-      user: new User()
-    });
-};
-
-/**
  * Create user
  */
 
 exports.create = async(function* (req, res) {
   const user = new User(req.body);
-  user.provider = 'local';
-  // console.log(user);
+
+  // Need to modify when goto production
+  // var geo = func.getLocation_postal('95008');
   var ipaddress = '73.223.236.152';
-  var geo = func.getLocation(ipaddress);
-  console.log(geo);
+  var geo = func.getLocation_IP(ipaddress);
+  
   try {
     _.extend(user, {
+      provider: 'local',
       activation: {
-        authCode: user.encryptAuthCode()
+        token: user.encryptAuthCode(),
+        status: false
       },
       location: {
         zipcode: geo.postal,
@@ -73,8 +62,8 @@ exports.create = async(function* (req, res) {
 
     // send email confirmation
     mailer.confirmation(user, function(err) {
-      if (err) return res.json({ signup_errors: err.errors, login_errors: '', user: user })
-      return res.json({ title:'SignUp Complete', signup_errors: '', login_errors: '', user: user });
+      if (err) return res.json({ status: false, signup_errors: err.errors, login_errors: '', user: user })
+      return res.json({ status: true, title:'SignUp Complete', signup_errors: '', login_errors: '', user: user });
     });
 
     // req.logIn(user, err => {
@@ -82,14 +71,39 @@ exports.create = async(function* (req, res) {
     //   return res.redirect('/');
     // });
   } catch (err) {
-    console.log(err)
-    const errors = Object.keys(err.errors)
-      .map(field => err.errors[field].message);
-
-    res.json({ userinfo: user, error: errors });
+    const errors = Object.keys(err.errors).map(field => err.errors[field].message);
+    res.json({ status: false, userinfo: user, error: errors });
   }
 });
 
+
+/**
+ * Account Activation
+ */
+
+exports.activation = function (req, res) {
+  var authcode = req.query['p'];
+  User
+    .findOne({ 'activation.token': authcode }).exec(function(err, user) {
+      if (err) return res.json({ status: false, message:'SignUp Activation Failure' });
+      if (!user) return res.json({ status: false, message:'SignUp Activation Failure' });
+      if (user.activation.status) {
+        return res.json({ status: false, message:'Already been activated.' });
+      }
+      else {
+        user.activation.status = true;
+        user.update(user, { 'user.activation.status': true }).exec(function(err) {
+          if (err) return res.json({ status: false, message:'Occurred error during the activation.\nPlease try again.', err: err });
+          return res.json({ status: true, title:'SignUp Activation Successful' })
+        });
+      }
+    });
+    // .findOneAndUpdate({ 'activation.token': authcode, 'activation.status': false }, { 'activation.status': true }, function(err, user){
+    //   if (err) return res.json({ status: false, title:'SignUp Activation Failure', status: false, user: user, login_errors:'' })
+    //   if (!user) return res.json({ status: false, title:'SignUp Activation Failure', status: false, user: user, login_errors:'' })
+    //   return res.json({ status: true, title:'SignUp Activation Successful', status: true, user: user, login_errors:'' })
+    // })
+}
 
 
 
@@ -97,30 +111,14 @@ exports.create = async(function* (req, res) {
  * Session
  */
 
-exports.login = function(req, res, next) {
-  if (req.user)
-    res.redirect('/');
-  else
-    res.render('users/login', {
-      title: 'Login'
-    });
-
-  // if (req.params.format == '.json')
-  //   res.json('{aaa:bbb}');
-  // else
-  //   res.render('users/login');
-};
-
 exports.session = function (req, res) {
   var user = req.user;
 
-  req.logIn(user, function(err) {
-    // if (err) { return errorLogin(req, res); }
-    // return res.send({ success: true, userinfo: user, message: 'authentication succeeded' });
+  req.login(user, {session: false}, function(err) {
     if (err) {
-      respond(res, 'login',{ success: false, message: 'Login failed. Check your login/password.' });
+      return res.json({ status: false, message: 'Login failed. Check your login/password.', err: err });
     }
-    respondOrRedirect ({req, res}, '/', user, 'authentication succeeded');
+    return res.json({ status: true, token: user.access_token });
   });
 }
 

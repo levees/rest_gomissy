@@ -26,9 +26,9 @@ var Email = {
   confirmation: function(options, callback) {
     var user = options;
     smtpTransport.sendMail({
-      from: "noreply <noreply@goodfriends.co>", // sender address
+      from: "noreply <noreply@gomissy.com>", // sender address
       to: '"' + user.name + '" <' + user.email + '>', // comma separated list of receivers
-      subject: "Welcome to Goodfriends", // Subject line
+      subject: "GoMissy 가입을 환영합니다 - 지금 시작 하세요.", // Subject line
       html: generateHtml.activation(user)
     }, function(error, response){
       if(error){
@@ -151,21 +151,21 @@ var Email = {
  */
 var generateHtml = {
   activation: function(user) {
-    var html = '<div style="margin-top:0;margin-bottom:0;margin-right:0;margin-left:0;border-width:0;padding-top:30px;padding-bottom:30px;padding-right:30px;padding-left:30px">'
-             + '<span style="color:#040407;font-size:24px">Hi ' + user.name + ',</span>'
-             + '<br><br>'
-             + 'Thanks for signing up and <span class="il">welcome</span> to Goodfriends.co! Login with the following information:'
-             + '<br><br>'
-             + 'Username: <b style="color:#040407">' + user.username + ', or your email address</b>'
-             + '<br>'
-             + 'Password: the password you used to create this account'
-             + '<br><br>'
-             + '<a href="http://www.goodfriends.co/login" style="background-color:#2d6cbe;background-image:none;background-repeat:repeat;background-position:top left;border-radius:4px;color:white;display:inline-block;font-size:20px;font-weight:normal;padding:10px 20px;text-decoration:none" target="_blank">Login now</a>'
-             + '<br><br>'
-             + '<hr style="border:0;height:2px;background:#efefef">'
-             + '<br>'
-             + 'If at any point you forget your chosen password, just click the ‘<a href="">Forgot your password?</a>’ link on the login page. A link to reset your password will then be sent to you.'
-             + '</div>'
+    var html = '<p>GoMissy 가입을 환영합니다.</p>'
+             + '<p></p>'
+             + '<p>안녕하세요, ' + user.name + ' 님,</p>'
+             + '<p></p>'
+             + '<p>회원님의 정보확인을 위해 아래의 링크를 통해 마지막 인증절차를 진행해 주시면</p>'
+             + '<p>이후 모든 서비스의 정상적인 이용이 가능합니다.</p>'
+             + '<p></p>'
+             + '<p><a href="http://www.gomissy.com/user/activation/?p=' + user.activation.token + '" target="_blank">회원가입 이메일 인증하기</a></p>'
+             + '<p></p>'
+             + '<p>또한 추후 아이디 또는 비밀번호의 분실시에도 입력하신 이메일을 통해 간편한 확인이 가능하오니 참조해 주시기 바랍니다.</p>'
+             + '<p></p>'
+             + '<p></p>'
+             + '<p></p>'
+             + '<p>GoMissy Inc.</p>'
+
     return html;
   },
 

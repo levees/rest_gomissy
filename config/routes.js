@@ -28,12 +28,13 @@ const fail = {
  */
 module.exports = function (app, passport) {
   const pauth = passport.authenticate.bind(passport);
-  app.use(function (req, res, next) {
-    res.locals.userinfo = req.user;
-    res.locals.path = req.path;
-    res.locals.menu = { "parent": {"path": ""}, "current": {"path": ""}}
-    next();
-  });
+
+  // app.use(function (req, res, next) {
+  //   res.locals.userinfo = req.user;
+  //   res.locals.path = req.path;
+  //   res.locals.menu = { "parent": {"path": ""}, "current": {"path": ""}}
+  //   next();
+  // });
 
   app.get('', home.index);
   app.get('/test', home.test);
@@ -42,43 +43,17 @@ module.exports = function (app, passport) {
   // app.get('/user/send', users.send)
 
   // user routes
-  app.get('/signup', users.signup);
   // app.get('/signup/complete', users.complete);
-  app.get('/login', users.login);
+  app.post('/signup', users.create);
+  app.get('/user/activation', users.activation)
+
+
   app.get('/logout', users.logout);
   app.get('/auth', users.auth);
   app.get('/forgot', users.forgot);
-  // app.post('/users', users.create);
-  // app.post('/users/session',
-  //   pauth('local', {
-  //     failureRedirect: '/login',
-  //     failureFlash: 'Invalid email or password.'
-  //   }), users.session);
-  // app.get('/users/:userId', users.show);
 
-
-  // app.get('/login', users.login);
-  // app.post('/login:format(.json)?', passport.authenticate('local', {
-  //   failureRedirect: '/login',
-  //   failureFlash: 'Invalid email or password.'
-  // }), users.session);
-
-  // app.post('/users/session',
-  //   pauth('local', {
-  //     failureRedirect: '/login',
-  //     failureFlash: 'Invalid email or password.'
-  //   }), users.session);
-
-
-  // app.post('/auth', users.auth);
-  app.post('/signup', users.create);
   app.post('/login', pauth('local'), users.session);
 
-  // app.post('/login',
-  //   pauth('local', {
-  //     failureRedirect: '/login',
-  //     failureFlash: 'Invalid email or password.'
-  //   }), users.session);
   app.post('/forgot', users.password_token);
   app.get('/password/reset', users.reset)
   app.post('/password/reset', users.update_password)

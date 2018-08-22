@@ -8,16 +8,12 @@ const express = require('express');
 const session = require('express-session');
 const compression = require('compression');
 const morgan = require('morgan');
-const cookieParser = require('cookie-parser');
-const cookieSession = require('cookie-session');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const csrf = require('csurf');
 const cors = require('cors');
-const sass = require('node-sass-middleware');
 const engine = require('ejs-locals')
 const i18n = require('i18n-light');
-const breadcrumbs = require('express-breadcrumbs');
 
 const mongoStore = require('connect-mongo')(session);
 const flash = require('connect-flash');
@@ -52,16 +48,6 @@ module.exports = function (app, passport) {
   //   next();
   // });
 
-  // adding the sass middleware
-  app.use(
-   sass({
-     src: config.root + '/scss',
-     dest: config.root + '/public/css',
-     prefix: '/css',
-     outputStyle: 'compressed',
-     debug: true,
-   })
-  );
 
   // Static files middleware
   app.use(express.static(config.root + '/public'));
@@ -104,19 +90,6 @@ module.exports = function (app, passport) {
     }
   }));
 
-  // CookieParser should be above session
-  app.use(cookieParser());
-  app.use(cookieSession({ secret: 'secret' }));
-  app.use(session({
-    resave: false,
-    saveUninitialized: true,
-    secret: pkg.name,
-    store: new mongoStore({
-      url: config.db,
-      collection : 'sessions'
-    })
-  }));
-
   // Cors
   // app.use(cors({
   //   origin: ['http://localhost:3000', 'https://cdnet-push.herokuapp.com'],
@@ -137,12 +110,6 @@ module.exports = function (app, passport) {
 
   // connect flash for flash messages - should be declared after sessions
   app.use(flash());
-
-  // Breadcrumb init
-  app.use(breadcrumbs.init());
-
-  // Set Breadcrumbs home information
-  app.use(breadcrumbs.setHome());
 
   // should be declared after session and flash
   // app.use(helpers(pkg.name));

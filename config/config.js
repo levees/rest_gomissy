@@ -38,8 +38,8 @@ const defaults = {
     auth: {
       // user: 'reafy.team@gmail.com',
       // pass: 'Reafy0426'
-      user: "noreply@goodfriends.co",
-      pass: "g00dfr1end$"
+      user: "noreply@gomissy.com",
+      pass: "@g0missy"
     }
   }
 };
