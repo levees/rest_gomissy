@@ -52,7 +52,7 @@ module.exports = function (app, passport) {
   app.get('/auth', users.auth);
   app.get('/forgot', users.forgot);
 
-  app.post('/login', pauth('local'), users.session);
+  app.post('/login', pauth('local',{session: false}), users.session);
 
   app.post('/forgot', users.password_token);
   app.get('/password/reset', users.reset)

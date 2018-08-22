@@ -2,7 +2,7 @@
 
 /*
  * Goodfriends web application : node.js, express, mongodb
- * Copyright(c) Gomissy 2017 Bryan.Oh 
+ * Copyright(c) Gomissy 2017 Bryan.Oh
  * MIT Licensed
  */
 
@@ -51,24 +51,20 @@ function listen () {
 }
 
 function connect () {
-  console.log(config.db);
-  var options = { 
-    useNewUrlParser: true,
-    server: {
-      socketOptions: {
-        socketTimeoutMS: 0,
-        keepAlive: true
-      },
-      reconnectTries: 30
-    } 
+  var options = {
+    useMongoClient: true,
+    reconnectTries: Number.MAX_VALUE,
+    poolSize: 10,
+    // useNewUrlParser: true,
+    // server: {
+    //   socketOptions: {
+    //     socketTimeoutMS: 0,
+    //     keepAlive: true
+    //   },
+    //   reconnectTries: 30
+    // }
   };
+  mongoose.Promise = global.Promise;
   mongoose.connect(config.db, options);
   return mongoose.connection;
 }
-
-
-
-
-
-
-

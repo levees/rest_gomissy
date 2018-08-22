@@ -41,7 +41,7 @@ exports.create = async(function* (req, res) {
   // var geo = func.getLocation_postal('95008');
   var ipaddress = '73.223.236.152';
   var geo = func.getLocation_IP(ipaddress);
-  
+
   try {
     _.extend(user, {
       provider: 'local',
@@ -62,14 +62,9 @@ exports.create = async(function* (req, res) {
 
     // send email confirmation
     mailer.confirmation(user, function(err) {
-      if (err) return res.json({ status: false, signup_errors: err.errors, login_errors: '', user: user })
-      return res.json({ status: true, title:'SignUp Complete', signup_errors: '', login_errors: '', user: user });
+      if (err) return res.json({ status: false, errors: err.errors })
+      return res.json({ status: true, user: user });
     });
-
-    // req.logIn(user, err => {
-    //   if (err) req.flash('info', 'Sorry! We are not able to log you in!');
-    //   return res.redirect('/');
-    // });
   } catch (err) {
     const errors = Object.keys(err.errors).map(field => err.errors[field].message);
     res.json({ status: false, userinfo: user, error: errors });
@@ -113,8 +108,8 @@ exports.activation = function (req, res) {
 
 exports.session = function (req, res) {
   var user = req.user;
-
-  req.login(user, {session: false}, function(err) {
+  console.log(user)
+  req.login(user, { session: false }, function(err) {
     if (err) {
       return res.json({ status: false, message: 'Login failed. Check your login/password.', err: err });
     }

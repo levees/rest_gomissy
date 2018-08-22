@@ -127,6 +127,7 @@ UserSchema.path('email').validate(function (email) {
   return email.length;
 }, 'Email cannot be blank');
 
+
 UserSchema.path('email').validate(function (email, fn) {
   const User = mongoose.model('User');
   if (this.skipValidation()) fn(true);
@@ -138,6 +139,7 @@ UserSchema.path('email').validate(function (email, fn) {
     });
   } else fn(true);
 }, 'Email already exists');
+
 
 UserSchema.path('username').validate(function (username) {
   if (this.skipValidation()) return true;
