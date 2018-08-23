@@ -29,15 +29,11 @@ const defaults = {
   //   parseApiKey: 'MASTER_KEY'
   // },
   smtp: {
-    // service: "Gmail",
-    // host: 'smtp.gmail.com',
     service: "Zoho",
     host: 'smtp.zoho.com',
     secureConnection: true,
     port: 465,
     auth: {
-      // user: 'reafy.team@gmail.com',
-      // pass: 'Reafy0426'
       user: "noreply@gomissy.com",
       pass: "@g0missy"
     }

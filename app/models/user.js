@@ -255,6 +255,7 @@ UserSchema.methods = {
   skipValidation: function () {
     return ~oAuthTypes.indexOf(this.provider);
   }
+
 };
 
 /**
@@ -272,10 +273,10 @@ UserSchema.statics = {
    */
 
   load: function (options, cb) {
-    options.select = options.select || 'name username';
+    options.select = options.select || 'name username email photo birth location mobile';
 
     return this.findOne(options.criteria)
-      // .select(options.select)
+      .select(options.select)
       .exec(cb);
   },
 
@@ -288,34 +289,9 @@ UserSchema.statics = {
    */
 
   temp_password: function (email, cb) {
-    return this.findOne({"email": email}, function(err, user) {
-      if (err) return cb(err);
-
-      var token = crypto.randomBytes(64).toString('hex');
-      var error = user.update({ password_token: token }, function(err, resp) {
-        return err;
-      });
-      return cb(error, user, token);
-    });
-  },
-
-  /**
-   * Update password by user
-   *
-   * @param {Object} options
-   * @param {Function} cb
-   * @api private
-  */
-
-  update_password: function (id, cb) {
-    return this.findOne({_id: id}, function(err, user) {
-      if (err) return cb(err);
-
-      var token = crypto.randomBytes(64).toString('hex');
-      var error = user.update({ password_token: token }, function(err, resp) {
-        return err;
-      });
-      return cb(error, user, token);
+    var token = crypto.randomBytes(64).toString('hex');
+    this.findOneAndUpdate({ email: email}, { password_token: token}, function(err, user) {
+      return cb(err, user, token);
     });
   },
 

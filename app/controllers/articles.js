@@ -20,6 +20,18 @@ const path = require('path');
 const moment = require('moment');
 const shortId = require('id-shorter');
 
+
+/***
+ * Category
+ */
+exports.category = function(req, res, next, category) {
+  if (!config.categories.includes(category)) {
+    return next(new Error('Invalid request.'));
+  }
+  next();
+};
+
+
 /**
  * Load
  */

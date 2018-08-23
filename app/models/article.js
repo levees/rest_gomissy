@@ -27,7 +27,11 @@ const CommentSchema = new Schema({
   },
   user: {
     type: Schema.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    index: true
+  },
+  ip_address: {
+    type: String
   },
   created_at: {
     type: Date,
@@ -35,6 +39,28 @@ const CommentSchema = new Schema({
   }
 });
 
+/**
+ * Like Schema
+ */
+
+const LikeSchema = new Schema({
+  user: {
+    type: Schema.ObjectId,
+    ref: 'User',
+    index: true
+  },
+  like: {
+    type: Number,
+    default: 0
+  },
+  ip_address: {
+    type: String
+  },
+  created_at: {
+    type: Date,
+    default: Date.now
+  }
+});
 
 /**
  * Article Schema
@@ -47,13 +73,14 @@ const ArticleSchema = new Schema({
     index: true
   },
   menu: {
-    type: Schema.ObjectId,
-    ref: 'Menu.sub_menu',
+    type: String,
+    required: true,
     index: true
   },
   title: {
     type: String,
     default: '',
+    required: true,
     trim: true
   },
   body: {
@@ -62,16 +89,20 @@ const ArticleSchema = new Schema({
     trim: true
   },
   comments: [CommentSchema],
-  event: {
-    type: Schema.ObjectId,
-    ref: 'Event',
-    index: true
-  },
+  likes: [LikeSchema],
   tags: {
     type: [],
     get: getTags,
     set: setTags,
     trim: true
+  },
+  is_community: {
+    type: Boolean,
+    default: true
+  },
+  is_log: {
+    type: Boolean,
+    default: false
   },
   ip_address: {
     type: String,

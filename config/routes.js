@@ -29,52 +29,31 @@ const fail = {
 module.exports = function (app, passport) {
   const pauth = passport.authenticate.bind(passport);
 
-  // app.use(function (req, res, next) {
-  //   res.locals.userinfo = req.user;
-  //   res.locals.path = req.path;
-  //   res.locals.menu = { "parent": {"path": ""}, "current": {"path": ""}}
-  //   next();
-  // });
-
   app.get('', home.index);
   app.get('/test', home.test);
   // app.get('/test/:id/:sid:format(.json)?', home.test);
 
-  // app.get('/user/send', users.send)
 
   // user routes
-  // app.get('/signup/complete', users.complete);
-  app.post('/signup', users.create);
-  app.get('/user/activation', users.activation)
+  app.post('/user/login', pauth('local',{session: false}), users.session);
+  app.post('/user/signup', users.create);
+  app.get('/user/logout', auth.accessToken, users.logout);
+  app.get('/user/activation', users.activation);
+  app.get('/user/profile', auth.accessToken, users.profile);
+
+  app.post('/pass/forgot', users.forgot_password);
+  app.post('/pass/reset', users.reset_password);
+
+  // app.get('/me', auth.accessToken, users.profile);
+  // app.get('/me1', users.profile);
 
 
-  app.get('/logout', users.logout);
-  app.get('/auth', users.auth);
-  app.get('/forgot', users.forgot);
 
-  app.post('/login', pauth('local',{session: false}), users.session);
 
-  app.post('/forgot', users.password_token);
-  app.get('/password/reset', users.reset)
-  app.post('/password/reset', users.update_password)
-  // app.post('/login', passport.authenticate('ldapauth', {session: false}), function(req, res) {
-  //   console.log(req.user);
-  //   res.send({status: 'ok'});
-  // });
-
-  // app.get('/message', auth.authToken, function(req, res) {
-  //   console.log('message');
-  //   res.send({status: 'ok'});
-  // });
-
-  // exports.format = function (req, res, next) {
-  //   if (req.params[0] == '.json')
-  //     app.reqFormat = 'json';
-  //   else
-  //     app.reqFormat = 'html'
-
-  //   next();
-  // };
+  // app.route('/board/:menu/:id')
+  //     .get(boards.detail)
+  //     .put(boards.update)
+  //     .delete(boards.delete)
 
 
   /**
@@ -85,9 +64,11 @@ module.exports = function (app, passport) {
   /**
    * Articles Routes
    */
-  app.param('id', articles.load);
-  app.get('/:category(board)', function(req,res){res.redirect("/board/notices")});
-  app.get('/:category(board)/:menu',          hasMenu, articles.list);
+  app.param('article_id', articles.load);
+  app.param('category', articles.category);
+  // app.get('/:category(board)', function(req,res){res.redirect("/board/notices")});
+  app.get('/:category(board)/:menu',          articles.list);
+
   app.get('/:category(board)/:menu/new',      hasMenu, auth.requiresLogin, articles.new);
   app.post('/:category(board)/:menu/new',     hasMenu, auth.requiresLogin, articles.create);
   app.get('/:category(board)/:menu/:id',      hasMenu, articles.show);

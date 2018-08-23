@@ -52,9 +52,9 @@ var Email = {
   resetpassword: function(options, callback) {
     var user = options;
     smtpTransport.sendMail({
-      from: "noreply <noreply@goodfriends.co>", // sender address
+      from: "noreply <noreply@gomissy.com>", // sender address
       to: '"' + user.name + '" <' + user.email + '>', // comma separated list of receivers
-      subject: "Goodfriends account password reset", // Subject line
+      subject: "Gomissy account password reset", // Subject line
       html: generateHtml.resetpassword(user)
     }, function(error, response){
       if(error){
@@ -175,11 +175,11 @@ var generateHtml = {
              + '<br><br>'
              + 'You recently requested a password reset for your Goodfriends ID. To complete the process, click the link below.'
              + '<br><br>'
-             + '<a href="http://www.goodfriends.co/password/reset?token=' + user.password_token + '" style="background-color:#2d6cbe;background-image:none;background-repeat:repeat;background-position:top left;border-radius:4px;color:white;display:inline-block;font-size:20px;font-weight:normal;padding:10px 20px;text-decoration:none" target="_blank">Reset now</a>'
+             + '<a href="http://www.gomissy.com/pass/reset?token=' + user.password_token + '" style="background-color:#2d6cbe;background-image:none;background-repeat:repeat;background-position:top left;border-radius:4px;color:white;display:inline-block;font-size:20px;font-weight:normal;padding:10px 20px;text-decoration:none" target="_blank">Reset now</a>'
              + '<br><br>'
              + '<hr style="border:0;height:2px;background:#efefef">'
              + '<br>'
-             + 'If you didn’t make this change or if you believe an unauthorized person has accessed your account, Pleae send email to support@goodfriends.co'
+             + 'If you didn’t make this change or if you believe an unauthorized person has accessed your account, Pleae send email to support@gomissy.com'
              + '</div>'
     return html;
 

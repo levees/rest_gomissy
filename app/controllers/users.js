@@ -18,16 +18,16 @@ const func = require('../../config/function')
  * Load
  */
 
-// exports.load = async(function* (req, res, next, _id) {
-//   const criteria = { _id };
-//   try {
-//     req.profile = yield User.load({ criteria });
-//     if (!req.profile) return next(new Error('User not found'));
-//   } catch (err) {
-//     return next(err);
-//   }
-//   next();
-// });
+exports.load = async(function* (req, res, next, _id) {
+  const criteria = { _id };
+  try {
+    req.profile = yield User.load({ criteria });
+    if (!req.profile) return next(new Error('User not found'));
+  } catch (err) {
+    return next(err);
+  }
+  next();
+});
 
 
 /**
@@ -62,12 +62,12 @@ exports.create = async(function* (req, res) {
 
     // send email confirmation
     mailer.confirmation(user, function(err) {
-      if (err) return res.json({ status: false, errors: err.errors })
-      return res.json({ status: true, user: user });
+      if (err) return res.json({ result: false, errors: err.errors })
+      return res.json({ result: true, user: user });
     });
   } catch (err) {
     const errors = Object.keys(err.errors).map(field => err.errors[field].message);
-    res.json({ status: false, userinfo: user, error: errors });
+    res.json({ result: false, userinfo: user, error: errors });
   }
 });
 
@@ -80,16 +80,16 @@ exports.activation = function (req, res) {
   var authcode = req.query['p'];
   User
     .findOne({ 'activation.token': authcode }).exec(function(err, user) {
-      if (err) return res.json({ status: false, message:'SignUp Activation Failure' });
-      if (!user) return res.json({ status: false, message:'SignUp Activation Failure' });
+      if (err) return res.json({ result: false, message:'SignUp Activation Failure' });
+      if (!user) return res.json({ result: false, message:'SignUp Activation Failure' });
       if (user.activation.status) {
-        return res.json({ status: false, message:'Already been activated.' });
+        return res.json({ result: false, message:'Already been activated.' });
       }
       else {
         user.activation.status = true;
         user.update(user, { 'user.activation.status': true }).exec(function(err) {
-          if (err) return res.json({ status: false, message:'Occurred error during the activation.\nPlease try again.', err: err });
-          return res.json({ status: true, title:'SignUp Activation Successful' })
+          if (err) return res.json({ result: false, message:'Occurred error during the activation.\nPlease try again.', err: err });
+          return res.json({ result: true, title:'SignUp Activation Successful' })
         });
       }
     });
@@ -98,7 +98,7 @@ exports.activation = function (req, res) {
     //   if (!user) return res.json({ status: false, title:'SignUp Activation Failure', status: false, user: user, login_errors:'' })
     //   return res.json({ status: true, title:'SignUp Activation Successful', status: true, user: user, login_errors:'' })
     // })
-}
+};
 
 
 
@@ -108,122 +108,89 @@ exports.activation = function (req, res) {
 
 exports.session = function (req, res) {
   var user = req.user;
-  console.log(user)
-  req.login(user, { session: false }, function(err) {
+  req.logIn(user, { session: false }, function(err) {
     if (err) {
-      return res.json({ status: false, message: 'Login failed. Check your login/password.', err: err });
+      return res.json({ result: false, message: 'Login failed. Check your login/password.', err: err });
     }
-    return res.json({ status: true, token: user.access_token });
+    return res.json({ result: true, token: user.access_token });
   });
-}
+};
 
 
+/**
+ * Logout
+ */
+exports.logout = function(req, res) {
+  // var access_token = req.headers['x-access-token'];
+  console.log(req.user_id);
+  User.findOneAndUpdate({ _id:req.user_id }, { access_token: '' }, function(err, user){
+    if (err) return res.json({ result: false });
+    req.logout();
+    return res.json({ result: true });
+  })
+};
 
-exports.auth = function(req, res, next) {
-  // verify the incoming JWT
-
-  try {
-    var incomingToken = jwt.verify(req.query.token, secret);
-  } catch (ex) {
-    console.error("ex.stack");
-    console.error(ex.stack);
-    return res.status(401).send('jwt error');
-  }
-
-  // do whatever auth stuff you want with the users details
-
-  var email = incomingToken.data.email;
-  var password = incomingToken.data.password;
-  var user_id;
-
-  if(email == 'me@test.com' && password == 'password'){
-
-    // user authentication was successful, assign whatever data you want
-    user_id = '123';
-  }
-
-  // construct JWT and redirect to the redirect_uri
-
-  var outgoingToken = jwt.sign({"user_id": user_id}, secret);
-  var url = req.query.redirect_uri +
-      '&token=' + encodeURIComponent(outgoingToken) +
-      '&state=' + encodeURIComponent(req.query.state);
-
-  return res.redirect(url);
-
-}
-
-exports.logout = function(req, res, next) {
-  var access_token = req.headers['x-auth-token'];
-  console.log(access_token);
-  req.logout()
-  res.redirect('/')
-}
 
 /**
  * Forgot password
  */
 
-exports.forgot = function(req, res, next) {
-  if (req.user)
-    res.redirect('/');
-  else
-    res.render('users/forgot', {
-      title: 'Forgot Password'
-    });
-}
+exports.forgot_password = function(req, res) {
+  var email = req.body.email;
 
-exports.password_token = function(req, res, next) {
-  if (req.user) {
-    res.redirect('/');
-  }
-  else {
-    var email = req.body.email;
-    User.temp_password(email, function(err, user, token) {
-      if (err) { return next(err); }
-
-      user.password_token = token;
-      // send email reset password
-      mailer.resetpassword(user, function(err) {
-        if (err) return res.render('users/password/error', { errors: err.errors })
-        return res.render('users/password/complete', { title:'Reset password' });
-      })
+  User.temp_password(email, function(err, user, token) {
+    if (err) return res.json({ result: false, message: err.errors });
+    user.password_token = token;
+    mailer.resetpassword(user, function(err) {
+      if (err) return res.json({ result: false, message: err.errors })
+      return res.json({ result: true, token: token });
     });
-  }
-}
+  });
+};
+
 
 /**
  * Reset password
  */
 
-exports.reset = function(req, res, next) {
-  if (req.user)
-    res.redirect('/');
-  else {
-    var token = req.query.token;
-    User.findOne({password_token: token}, function(err, user) {
-      if (err) return res.render('users/password/error', { errors: err.errors });
-      return res.render('users/password/reset', {
-        title:'Reset password',
-        user: user
-      });
-    })
-  }
-}
-
-exports.update_password = function(req, res, next) {
-  var id = req.body._id;
+exports.reset_password = function(req, res, next) {
+  var token = req.body.token;
   var password = req.body.password;
-  User.findOne({_id: id}, function(err, user) {
-    user.password = password;
-    user.save();
 
-    req.logIn(user, err => {
-      if (err) req.flash('info', 'Sorry! We are not able to log you in!');
-      return res.redirect('/');
+  User.findOne({ password_token: token}, function(err, user) {
+    user.password = password;
+    user.password_token = '';
+    user.save(function(err, user) {
+      if (err) return res.json({ result: false, message: err.errors });
+      return res.json({ result: true });
     });
-  })
+  });
+};
+
+
+/* Get user profile
+ *
+ */
+
+exports.profile = function(req, res) {
+  User.load({ _id: req.user_id }, function(err, user) {
+    if (err) return res.json({ result: false, message: err.errors });
+    return res.json({ result: true, data: user });
+  });
+};
+
+
+
+
+
+
+exports.test = function(req, res) {
+  console.log(req.user_id);
+  return res.json({result: true, message: req.user_id})
 }
+
+
+
 
 
 
