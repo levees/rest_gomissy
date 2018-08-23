@@ -73,8 +73,8 @@ const ArticleSchema = new Schema({
     index: true
   },
   menu: {
-    type: String,
-    required: true,
+    type: Schema.ObjectId,
+    ref: 'Menu.sub_menu',
     index: true
   },
   title: {

@@ -1,0 +1,43 @@
+{"category": "미시토크","menu": "고민 있어요","path": "worries","order" : 1}
+{"category": "미시토크","menu": "에피소드","path": "episode","order" : 2}
+{"category": "미시토크","menu": "나만의 노하우","path": "knowhow","order" : 3}
+{"category": "미시토크","menu": "묻고 답하기","path": "qna","order" : 4}
+{"category": "미시토크","menu": "정치/사회/핫이슈","path": "issues","order" : 5}
+{"category": "미시토크","menu": "문화/TV연예","path": "curture","order" : 6}
+{"category": "미시토크","menu": "종교","path": "religion","order" : 7}
+{"category": "미시토크","menu": "친구해요 우리","path": "friends","order" : 8}
+{"category": "미시토크","menu": "좋은생각","path": "wrinkle","order" : 9}
+{"category": "미시토크","menu": "내 성적인 수다","path": "sexual","order" : 10}
+{"category": "스트롱맘","menu": "임신/출산","path": "pregnant","order" : 1}
+{"category": "스트롱맘","menu": "경험담","path": "experiences","order" : 2}
+{"category": "스트롱맘","menu": "임신계획","path": "babyplan","order" : 3}
+{"category": "스트롱맘","menu": "극복 불임/유산","path": "sterility","order" : 4}
+{"category": "스트롱맘","menu": "산부인과","path": "obstetrics","order" : 5}
+{"category": "스트롱맘","menu": "산후조리","path": "postpartum","order" : 6}
+{"category": "스트롱맘","menu": "태몽풀이","path": "babydream","order" : 7}
+{"category": "스트롱맘","menu": "육아/교육","path": "nursing","order" : 8}
+{"category": "스트롱맘","menu": "직장맘","path": "workingmom","order" : 9}
+{"category": "스트롱맘","menu": "도전 아기모델","path": "babymodel","order" : 10}
+{"category": "라이프","menu": "쇼핑/쿠폰정보","path": "coupons","order" : 1}
+{"category": "라이프","menu": "건강/다이어트","path": "health","order" : 2}
+{"category": "라이프","menu": "패션/뷰티/스타일","path": "fashion","order" : 3}
+{"category": "라이프","menu": "리빙/홈/데코","path": "living","order" : 4}
+{"category": "라이프","menu": "요리/레시피","path": "dish","order" : 5}
+{"category": "라이프","menu": "여행","path": "travel","order" : 6}
+{"category": "라이프","menu": "반려동물","path": "pets","order" : 7}
+{"category": "라이프","menu": "재테크","path": "finance","order" : 8}
+{"category": "라이프","menu": "이민/VISA","path": "visa","order" : 9}
+{"category": "라이프","menu": "영어 부수기","path": "english","order" : 10}
+{"category": "마켓","menu": "무빙세일","path": "moving","order" : 1}
+{"category": "마켓","menu": "유아용품","path": "kids","order" : 2}
+{"category": "마켓","menu": "책/교육","path": "education","order" : 3}
+{"category": "마켓","menu": "생활/주방/가구","path": "kitchen","order" : 4}
+{"category": "마켓","menu": "의류/악세사리","path": "clothes","order" : 5}
+{"category": "마켓","menu": "건강/운동/레저","path": "workout","order" : 6}
+{"category": "마켓","menu": "가전/컴퓨터/모바일","path": "electronics","order" : 7}
+{"category": "마켓","menu": "자동차","path": "autos","order" : 8}
+{"category": "마켓","menu": "부동산/렌트","path": "rent","order" : 9}
+{"category": "마켓","menu": "구해요/드려요","path": "wanted","order" : 10}
+{"category": "비즈","menu": "추천 맛집","path": "recommand","order" : 1}
+{"category": "비즈","menu": "무엇이든 광고 하세요","path": "ads","order" : 2}
+{"category": "비즈","menu": "한인업소 검색","path": "business","order" : 3}

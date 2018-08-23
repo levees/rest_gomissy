@@ -13,7 +13,7 @@ const path = require('path');
 const defaults = {
   baseUrl: 'rest.gomissy.com',
   root: path.join(__dirname, '..'),
-  secret: 'goodfriends',
+  secret: 'gomissy',
   db: 'mongodb://54.215.185.175/gomissy_dev',
   // db: 'mongodb://localhost/goodfriends',
   // notifier: {

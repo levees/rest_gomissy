@@ -21,16 +21,6 @@ const moment = require('moment');
 const shortId = require('id-shorter');
 
 
-/***
- * Category
- */
-exports.category = function(req, res, next, category) {
-  if (!config.categories.includes(category)) {
-    return next(new Error('Invalid request.'));
-  }
-  next();
-};
-
 
 /**
  * Load
@@ -39,7 +29,7 @@ exports.category = function(req, res, next, category) {
 exports.load = async(function* (req, res, next, id) {
   var ids = id.split('-');
   var id = ids[ids.length - 1];
-  var shortid = shortId({isFullId: true});
+  var shortid = shortId({ isFullId: true });
   var decoded_id = shortid.decode(id);
 
   try {
@@ -71,12 +61,11 @@ exports.index = async(function* (req, res) {
 
 exports.list = async(function* (req, res) {
   const menu = req.params.menu;
-  // console.log(menu);
   const page = (req.query.page > 0 ? req.query.page : 1) - 1;
   const _id = req.query.item;
   const limit = 30;
   const options = {
-    criteria: { menu: res.locals.menu.current },
+    criteria: { menu: req.menu._id },
     limit: limit,
     page: page
   };
@@ -86,27 +75,12 @@ exports.list = async(function* (req, res) {
   const articles = yield Article.list(options);
   const count = yield Article.count(options.criteria);
 
-  respond(res, 'articles/list', {
-    pagetitle: res.locals.menu.current.title,
-    breadcrumbs: req.breadcrumbs(),
+  return res.json({
     articles: articles,
-    page: { current: page + 1, total: Math.ceil(count / limit), block: limit },
-    moment: moment,
-    shortid: shortId({isFullId: true})
+    page: { current: page + 1, total: Math.ceil(count / limit), block: limit }
   });
 });
 
-/**
- * New article
- */
-
-exports.new = function (req, res){
-  res.render('articles/new', {
-    pagetitle: res.locals.menu.current.title,
-    breadcrumbs: req.breadcrumbs(),
-    article: new Article()
-  });
-};
 
 /**
  * Create an article
@@ -115,50 +89,19 @@ exports.new = function (req, res){
 
 exports.create = async(function* (req, res) {
   const article = new Article(only(req.body, 'title body tags'));
-  article.user = req.user;
-  article.menu = res.locals.menu.current;
-  article.body = bodyWithImgs(req.body.body, res.locals.menu.current.title);
-  article.ip_address = func.getIPAddr();
+  _.extend(article, {
+    user: req.user_id,
+    menu: req.menu._id,
+    body: bodyWithImgs(req.body.body, req.menu.path),
+    ip_address: func.getIPAddr()
+  });
 
   article.save(function(err) {
-    if (err) {
-      return respond(res, 'articles/new', {
-          pagetitle: article.title || 'New Article',
-          breadcrumbs: req.breadcrumbs(),
-          errors: [err.toString()],
-          article
-        }, 422);
-    }
-    else {
-      if (res.locals.menu.current.path == 'events') {
-        const event = new Event(only(req.body, 'place address period price limit'));
-        event.begin_at = moment(req.body.begin_date + ' ' + req.body.begin_time);
-        console.log(event)
-        event.save();
-        article.event = event._id;
-        article.save();
-      }
-
-      var shortid = shortId({isFullId: true});
-      var pagename = article.title.split(' ').join('-') + '-' + shortid.encode(article._id)
-      return respondOrRedirect({ req, res }, `/${res.locals.menu.parent.path}/${res.locals.menu.current.path}/${pagename}`, article, {
-          type: 'success',
-          text: 'Successfully created article!'
-        });
-    }
+    if (err) return res.status(422).json({ result: false, message: err.errors });
+    return res.status(200).json({ result: true, data: article });
   });
 });
 
-/**
- * Edit an article
- */
-
-exports.edit = function (req, res) {
-  res.render('articles/edit', {
-    title: 'Edit ' + req.article.title,
-    article: req.article
-  });
-};
 
 /**
  * Update article

@@ -65,14 +65,13 @@ module.exports = function (app, passport) {
    * Articles Routes
    */
   app.param('article_id', articles.load);
-  app.param('category', articles.category);
+  // app.param('category', articles.category);
   // app.get('/:category(board)', function(req,res){res.redirect("/board/notices")});
-  app.get('/:category(board)/:menu',          articles.list);
+  app.get('/:category/:menu',                 hasMenu, articles.list);
 
-  app.get('/:category(board)/:menu/new',      hasMenu, auth.requiresLogin, articles.new);
   app.post('/:category(board)/:menu/new',     hasMenu, auth.requiresLogin, articles.create);
   app.get('/:category(board)/:menu/:id',      hasMenu, articles.show);
-  app.get('/:category(board)/:menu/:id/edit', hasMenu, articleAuth, articles.edit);
+
   app.put('/:category(board)/:menu/:id',      hasMenu, articleAuth, articles.update);
   app.delete('/:category(board)/:menu/:id',   hasMenu, articleAuth, articles.destroy);
 
