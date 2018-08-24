@@ -6,6 +6,7 @@
 
 const mongoose = require('mongoose');
 const only = require('only');
+const _ = require('underscore');
 const { wrap: async } = require('co');
 const config = require('../../config/config');
 const func = require('../../config/function');
@@ -93,7 +94,8 @@ exports.create = async(function* (req, res) {
     user: req.user_id,
     menu: req.menu._id,
     body: bodyWithImgs(req.body.body, req.menu.path),
-    ip_address: func.getIPAddr()
+    ip_address: func.getIPAddr(),
+    is_community: true
   });
 
   article.save(function(err) {
@@ -112,28 +114,24 @@ exports.update = async(function* (req, res){
   assign(article, only(req.body, 'title body tags'));
   try {
     yield article.uploadAndSave(req.file);
-    respondOrRedirect({ res }, `/articles/${article._id}`, article);
+    return res.status(200).json({ result: true, data: article });
   } catch (err) {
-    respond(res, 'articles/edit', {
-      title: 'Edit ' + article.title,
-      errors: [err.toString()],
-      article
-    }, 422);
+    return res.status(422).json({ result: false, errors: [err.toString()] });
   }
 });
 
 /**
- * Show
+ * Detail
  */
 
-exports.show = function (req, res){
+exports.detail = async(function* (req, res){
   respond(res, 'articles/show', {
     pagetitle: res.locals.menu.current.title,
     breadcrumbs: req.breadcrumbs(),
     article: req.article,
     moment: moment
   });
-};
+});
 
 /**
  * Delete an article
