@@ -15,7 +15,7 @@ const MenuSchema = new Schema({
   title: {
     type: String
   },
-  sub_menu: [
+  sub_menus: [
     {
       type: Schema.ObjectId,
       ref: 'Menu'

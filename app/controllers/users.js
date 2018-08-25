@@ -80,16 +80,16 @@ exports.activation = function (req, res) {
   var authcode = req.query['p'];
   User
     .findOne({ 'activation.token': authcode }).exec(function(err, user) {
-      if (err) return res.json({ result: false, message:'SignUp Activation Failure' });
-      if (!user) return res.json({ result: false, message:'SignUp Activation Failure' });
+      if (err) return res.json({ result: false, errors: ['SignUp Activation Failure'] });
+      if (!user) return res.json({ result: false, errors: ['SignUp Activation Failure'] });
       if (user.activation.status) {
-        return res.json({ result: false, message:'Already been activated.' });
+        return res.json({ result: false, errors: ['Already been activated.'] });
       }
       else {
         user.activation.status = true;
         user.update(user, { 'user.activation.status': true }).exec(function(err) {
-          if (err) return res.json({ result: false, message:'Occurred error during the activation.\nPlease try again.', err: err });
-          return res.json({ result: true, title:'SignUp Activation Successful' })
+          if (err) return res.json({ result: false, errors: ['Occurred error during the activation.\nPlease try again.']});
+          return res.json({ result: true });
         });
       }
     });
@@ -110,7 +110,7 @@ exports.session = function (req, res) {
   var user = req.user;
   req.logIn(user, { session: false }, function(err) {
     if (err) {
-      return res.json({ result: false, message: 'Login failed. Check your login/password.', err: err });
+      return res.json({ result: false, errors: err.errors });
     }
     return res.json({ result: true, token: user.access_token });
   });
@@ -139,10 +139,10 @@ exports.forgot_password = function(req, res) {
   var email = req.body.email;
 
   User.temp_password(email, function(err, user, token) {
-    if (err) return res.json({ result: false, message: err.errors });
+    if (err) return res.json({ result: false, errors: err.errors });
     user.password_token = token;
     mailer.resetpassword(user, function(err) {
-      if (err) return res.json({ result: false, message: err.errors })
+      if (err) return res.json({ result: false, errors: err.errors })
       return res.json({ result: true, token: token });
     });
   });
@@ -161,7 +161,7 @@ exports.reset_password = function(req, res, next) {
     user.password = password;
     user.password_token = '';
     user.save(function(err, user) {
-      if (err) return res.json({ result: false, message: err.errors });
+      if (err) return res.json({ result: false, errors: err.errors });
       return res.json({ result: true });
     });
   });
@@ -174,7 +174,7 @@ exports.reset_password = function(req, res, next) {
 
 exports.profile = function(req, res) {
   User.load({ _id: req.user_id }, function(err, user) {
-    if (err) return res.json({ result: false, message: err.errors });
+    if (err) return res.json({ result: false, errors: err.errors });
     return res.json({ result: true, data: user });
   });
 };
@@ -183,21 +183,3 @@ exports.profile = function(req, res) {
 
 
 
-
-exports.test = function(req, res) {
-  console.log(req.user_id);
-  return res.json({result: true, message: req.user_id})
-}
-
-
-
-
-
-
-
-var errorLogin = function(req, res) {
-  if (req.params.format == '.json')
-    res.json({ success: false, message: 'Login failed. Check your login/password.' });
-  else
-    res.render('users/login', { message: 'Login failed. Check your login/password.' });
-};

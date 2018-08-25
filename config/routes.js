@@ -8,6 +8,7 @@ const users     = require('../app/controllers/users');
 const uploads   = require('../app/controllers/uploads');
 const articles  = require('../app/controllers/articles');
 const comments  = require('../app/controllers/comments');
+const likes     = require('../app/controllers/likes');
 const auth      = require('./auth');
 const menu      = require('./menu');
 
@@ -15,9 +16,10 @@ const menu      = require('./menu');
 /**
  * Route middlewares
  */
-const hasMenu = [menu.hasMenu];
-const articleAuth = [auth.requiresLogin, auth.article.hasAuthorization];
-const commentAuth = [auth.requiresLogin, auth.comment.hasAuthorization];
+const menuAuth = [menu.has_menu, menu.access_menu];
+const articleAuth = [auth.requires_login, auth.article.authorization];
+const commentAuth = [auth.requires_login, auth.comment.authorization];
+const likeAuth = [auth.requires_login, auth.like.authorization];
 
 const fail = {
   failureRedirect: '/login'
@@ -28,6 +30,9 @@ const fail = {
  */
 module.exports = function (app, passport) {
   const pauth = passport.authenticate.bind(passport);
+  app.use(function (req, res, next) {
+    auth.access_token(req, res, next);
+  });
 
   app.get('', home.index);
   app.get('/test', home.test);
@@ -37,9 +42,9 @@ module.exports = function (app, passport) {
   // user routes
   app.post('/user/login', pauth('local',{session: false}), users.session);
   app.post('/user/signup', users.create);
-  app.get('/user/logout', auth.accessToken, users.logout);
+  app.get('/user/logout', auth.access_token, users.logout);
   app.get('/user/activation', users.activation);
-  app.get('/user/profile', auth.accessToken, users.profile);
+  app.get('/user/profile', auth.access_token, users.profile);
 
   app.post('/pass/forgot', users.forgot_password);
   app.post('/pass/reset', users.reset_password);
@@ -66,14 +71,36 @@ module.exports = function (app, passport) {
    */
   app.param('article_id', articles.load);
   app.route('/:category/:menu')
-     .get(hasMenu, articles.list)
-     .post(hasMenu, auth.accessToken, articles.create);
+     .get(menuAuth, articles.list)
+     .post(menuAuth, articles.create);
 
   app.route('/:category/:menu/:article_id')
-     .get(articles.detail)
-     .put(hasMenu, articleAuth, articles.update)
-     .delete(hasMenu, articleAuth, articles.destroy);
+     .get(menuAuth, articles.detail)
+     .put(menuAuth, articleAuth, articles.update)
+     .delete(menuAuth, articleAuth, articles.destroy);
 
+  /**
+   * Comments Routes
+   */  
+  app.param('comment_id', comments.load);
+  app.route('/:category/:menu/:article_id/comments')
+     .get(menuAuth, comments.list)
+     .post(menuAuth, comments.create);
+
+  app.route('/:category/:menu/:article_id/comments/:comment_id')
+     .delete(menuAuth, commentAuth, comments.destroy);
+
+  /**
+   * Likes Routes
+   */  
+  app.param('like_id', likes.load);
+  app.route('/:category/:menu/:article_id/likes')
+     .get(menuAuth, likes.list)
+     .post(menuAuth, likes.create);
+
+  app.route('/:category/:menu/:article_id/likes/:like_id')
+     .put(menuAuth, likeAuth, likes.update)
+     .delete(menuAuth, likeAuth, likes.destroy);
 
 
   // app.get('/:category(board)/:menu/:id',      hasMenu, articles.show);

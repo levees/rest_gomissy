@@ -11,7 +11,7 @@ const config = require('./config');
  *  Token authorization routing middleware
  */
 
-exports.accessToken = function(req, res, next) {
+exports.access_token = function(req, res, next) {
   // check header or url parameters or post parameters for token
   var token = req.body.token || req.query.token || req.headers['x-access-token'];
 
@@ -20,28 +20,32 @@ exports.accessToken = function(req, res, next) {
     // verifies secret and checks exp
     jwt.verify(token, config.secret, function(err, decoded) {
       if (err) {
-        return res.json({ success: false, message: 'Failed to authenticate token.' });    
+        return res.json({ success: false, errors: ['Failed to authenticate token.'] });    
       } else {
         // if everything is good, save to request for use in other routes
-        req.user_id = decoded.data;
+        req.user = decoded.data;
         next();
       }
     });
-  } 
+  }
   else {
-    return res.status(403).send({ success: false, message: 'No token provided.' });
+    next();
+    // return res.status(403).send({ success: false, errors: ['No token provided.'] });
   }
 };
+
+
 
 /*
  *  Generic require login routing middleware
  */
 
-exports.requiresLogin = function (req, res, next) {
-  // if (req.isAuthenticated()) return next();
-  // if (req.method == 'GET') req.session.returnTo = req.originalUrl;
-  // res.redirect('/login');
+exports.requires_login = function (req, res, next) {
+  if (req.user) return next();
+  return res.status(401).json({ result: false, errors: ["No permission."] });
 };
+
+
 
 /*
  *  User authorization routing middleware
@@ -62,10 +66,9 @@ exports.user = {
  */
 
 exports.article = {
-  hasAuthorization: function (req, res, next) {
-    if (req.article.user.id != req.user.id) {
-      req.flash('info', 'You are not authorized');
-      return res.redirect('/articles/' + req.article.id);
+  authorization: function (req, res, next) {
+    if (req.article.user != req.user.id) {
+      return res.json({ result: false, errors: ['You are not authorized'] });
     }
     next();
   }
@@ -76,18 +79,26 @@ exports.article = {
  */
 
 exports.comment = {
-  hasAuthorization: function (req, res, next) {
-    // if the current user is comment owner or article owner
-    // give them authority to delete
-    if (req.user.id === req.comment.user.id || req.user.id === req.article.user.id) {
-      next();
-    } else {
-      req.flash('info', 'You are not authorized');
-      res.redirect('/articles/' + req.article.id);
+  authorization: function (req, res, next) {
+    if (req.comment.user != req.user.id) {
+      return res.json({ result: false, errors: ['You are not authorized'] });
     }
+    next();
   }
 };
 
+/**
+ * Like authorization routing middleware
+ */
+
+exports.like = {
+  authorization: function (req, res, next) {
+    if (req.like.user != req.user.id) {
+      return res.json({ result: false, errors: ['You are not authorized'] });
+    }
+    next();
+  }
+};
 
 
 
@@ -103,7 +114,7 @@ exports.deviceToken = function(req, res, next) {
     next();
   }
   else {
-    return res.status(403).send({ success: false, message: 'No information provided.' });    
+    return res.status(403).send({ success: false, errors: ['No information provided.'] });    
   }
 };
 

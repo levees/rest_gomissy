@@ -23,13 +23,13 @@ module.exports = new LocalStrategy({
     User.findOne({ username: username }, function(err, user) {
       if (err) return done(err);
       if (!user) {
-        return done(null, false, { message: 'Incorrect username or password.' });
+        return done(null, false, { errors: ['Incorrect username or password.'] });
       }
       if (!user.authenticate(password)) {
-        return done(null, false, { message: 'Incorrect username or password.' });
+        return done(null, false, { errors: ['Incorrect username or password.'] });
       }
 
-      var access_token = user.access_token = createJWT(user._id);
+      var access_token = user.access_token = createJWT({ id: user._id, username: user.username, level: user.level });
       User.updateOne(user, {$set: {'access_token': access_token}}).exec();
       return done(null, user);
     });
@@ -38,9 +38,7 @@ module.exports = new LocalStrategy({
 
 var createJWT = function(userinfo) {
   return jwt.sign({
-    // exp: 1534952623, //Math.floor(Date.now() / 1000) + (60 * 60 * 24),
+    exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24),
     data: userinfo
   }, config.secret);
-  // return jwt.sign(userinfo, config.secret, { expiresIn: 7*24*60*60 });
-  // return jwt.sign(userinfo, config.secret);
 };

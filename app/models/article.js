@@ -19,7 +19,6 @@ const setTags = tags => tags.split(',');
 /**
  * Comment Schema
  */
-
 const CommentSchema = new Schema({
   body: {
     type: String,
@@ -39,10 +38,10 @@ const CommentSchema = new Schema({
   }
 });
 
+
 /**
  * Like Schema
  */
-
 const LikeSchema = new Schema({
   user: {
     type: Schema.ObjectId,
@@ -62,10 +61,10 @@ const LikeSchema = new Schema({
   }
 });
 
+
 /**
  * Article Schema
  */
-
 const ArticleSchema = new Schema({
   user: {
     type: Schema.ObjectId,
@@ -114,10 +113,10 @@ const ArticleSchema = new Schema({
   }
 });
 
+
 /**
  * Event Schema
  */
-
 const EventSchema = new Schema({
   place: {
     type: String,
@@ -153,10 +152,10 @@ const EventSchema = new Schema({
   }]
 });
 
+
 /**
  * Validations
  */
-
 ArticleSchema.path('title').required(true, 'Article title cannot be blank');
 ArticleSchema.path('body').required(true, 'Article body cannot be blank');
 EventSchema.path('address').required(true, 'Address cannot be blank');
@@ -166,7 +165,6 @@ EventSchema.path('begin_at').required(true, 'Event date cannot be blank');
 /**
  * Pre-remove hook
  */
-
 ArticleSchema.pre('remove', function (next) {
   // const imager = new Imager(imagerConfig, 'S3');
   // const files = this.image.files;
@@ -184,6 +182,30 @@ ArticleSchema.pre('remove', function (next) {
  */
 
 ArticleSchema.methods = {
+  /**
+   * Save article and upload image
+   *
+   * @param {Object} images
+   * @api private
+   */
+
+  uploadAndSave: function (image) {
+    const err = this.validateSync();
+    if (err && err.toString()) throw new Error(err.toString());
+    return this.save();
+
+    /*
+    if (images && !images.length) return this.save();
+    const imager = new Imager(imagerConfig, 'S3');
+    imager.upload(images, function (err, cdnUri, files) {
+      if (err) return cb(err);
+      if (files.length) {
+        self.image = { cdnUri : cdnUri, files : files };
+      }
+      self.save(cb);
+    }, 'article');
+    */
+  },
 
   /**
    * Add comment
@@ -193,19 +215,18 @@ ArticleSchema.methods = {
    * @api private
    */
 
-  addComment: function (user, comment) {
-    this.comments.push({
-      body: comment.body,
-      user: user._id
-    });
+  addComment: function (comment) {
+    console.log(comment);
 
-    if (!this.user.email) this.user.email = 'email@product.com';
+    this.comments.push(comment);
 
-    notify.comment({
-      article: this,
-      currentUser: user,
-      comment: comment.body
-    });
+    // if (!this.user.email) this.user.email = 'email@product.com';
+
+    // notify.comment({
+    //   article: this,
+    //   currentUser: user,
+    //   comment: comment.body
+    // });
 
     return this.save();
   },
@@ -213,20 +234,77 @@ ArticleSchema.methods = {
   /**
    * Remove comment
    *
-   * @param {commentId} String
+   * @param {comment_id} String
    * @api private
    */
 
-  removeComment: function (commentId) {
+  removeComment: function (comment_id) {
     const index = this.comments
       .map(comment => comment.id)
-      .indexOf(commentId);
+      .indexOf(comment_id);
 
     if (~index) this.comments.splice(index, 1);
     else throw new Error('Comment not found');
     return this.save();
-  }
-};
+  },
+
+
+  /**
+   * Add Like
+   *
+   * @param {User} user
+   * @param {Object} like
+   * @api private
+   */
+
+  addLike: function (like) {    
+    this.likes.push(like);
+
+    // if (!this.user.email) this.user.email = 'email@product.com';
+
+    // notify.like({
+    //   article: this,
+    //   currentUser: user,
+    //   like: like.body
+    // });
+
+    return this.save();
+  },
+
+  /**
+   * Update Like
+   *
+   * @param {like_id} String
+   * @param {like} Number
+   * @api private
+   */
+
+  updateLike: function (like_id, like) {
+    const index = this.likes
+      .map(like => like.id)
+      .indexOf(like_id);
+
+    if (~index) this.likes[index].like = like;
+    else throw new Error('Like not found');
+    return this.save();
+  },
+
+  /**
+   * Remove like
+   *
+   * @param {like_id} String
+   * @api private
+   */
+
+  removeLike: function (like_id) {
+    const index = this.likes
+      .map(like => like.id)
+      .indexOf(like_id);
+
+    if (~index) this.likes.splice(index, 1);
+    else throw new Error('Like not found');
+    return this.save();
+  }};
 
 /**
  * Statics
@@ -273,3 +351,4 @@ ArticleSchema.statics = {
 mongoose.model('Article', ArticleSchema);
 mongoose.model('Event',   EventSchema);
 mongoose.model('Comment', CommentSchema);
+mongoose.model('Like', LikeSchema);
