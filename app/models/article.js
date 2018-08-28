@@ -216,8 +216,6 @@ ArticleSchema.methods = {
    */
 
   addComment: function (comment) {
-    console.log(comment);
-
     this.comments.push(comment);
 
     // if (!this.user.email) this.user.email = 'email@product.com';
@@ -257,7 +255,7 @@ ArticleSchema.methods = {
    * @api private
    */
 
-  addLike: function (like) {    
+  addLike: function (like) {
     this.likes.push(like);
 
     // if (!this.user.email) this.user.email = 'email@product.com';
@@ -321,9 +319,9 @@ ArticleSchema.statics = {
 
   load: function (_id) {
     return this.findOne({ _id })
-      .populate('user', 'name email username')
-      .populate('event')
-      .populate('comments.user')
+      .populate('user', 'username name photo')
+      .populate('comments.user', 'username name photo')
+      .populate('likes.user', 'username name photo')
       .exec();
   },
 
@@ -339,8 +337,7 @@ ArticleSchema.statics = {
     const page = options.page || 0;
     const limit = options.limit || 30;
     return this.find(criteria)
-      .populate('event')
-      .populate('user')
+      .populate('user', 'username name photo')
       .sort({ createdAt: -1 })
       .limit(limit)
       .skip(limit * page)
@@ -349,6 +346,6 @@ ArticleSchema.statics = {
 };
 
 mongoose.model('Article', ArticleSchema);
-mongoose.model('Event',   EventSchema);
 mongoose.model('Comment', CommentSchema);
-mongoose.model('Like', LikeSchema);
+mongoose.model('Like',    LikeSchema);
+mongoose.model('Event',   EventSchema);

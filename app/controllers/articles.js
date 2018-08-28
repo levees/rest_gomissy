@@ -10,7 +10,6 @@ const _ = require('underscore');
 const { wrap: async } = require('co');
 const config = require('../../config/config');
 const func = require('../../config/function');
-// const { respond, respondOrRedirect } = require('../../config/respond');
 const Article = mongoose.model('Article');
 const Event = mongoose.model('Event');
 const assign = Object.assign;
@@ -86,14 +85,14 @@ exports.list = async(function* (req, res) {
 exports.create = async(function* (req, res) {
   const article = new Article(only(req.body, 'title body tags'));
   _.extend(article, {
-    user: req.user_id,
+    user: req.user.id,
     menu: req.menu.current._id,
     body: func.bodyWithImgs(req.body.body, req.menu.current.path),
     ip_address: func.getIPAddr(),
     is_community: true
   });
 
-  article.save(function(err) {
+  article.save(function (err) {
     if (err) return res.status(422).json({ result: false, message: err.errors });
     return res.status(200).json({ result: true, data: article });
   });
@@ -135,6 +134,3 @@ exports.destroy = async(function* (req, res) {
     return res.status(422).json({ result: false, errors: [err.toString()] });
   }
 });
-
-
-

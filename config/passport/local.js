@@ -38,7 +38,7 @@ module.exports = new LocalStrategy({
 
 var createJWT = function(userinfo) {
   return jwt.sign({
-    exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24),
+    // exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24),
     data: userinfo
   }, config.secret);
 };

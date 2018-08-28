@@ -122,8 +122,8 @@ exports.session = function (req, res) {
  */
 exports.logout = function(req, res) {
   // var access_token = req.headers['x-access-token'];
-  console.log(req.user_id);
-  User.findOneAndUpdate({ _id:req.user_id }, { access_token: '' }, function(err, user){
+  console.log(req.user.id);
+  User.findOneAndUpdate({ _id:req.user.id }, { access_token: '' }, function(err, user){
     if (err) return res.json({ result: false });
     req.logout();
     return res.json({ result: true });
@@ -173,13 +173,8 @@ exports.reset_password = function(req, res, next) {
  */
 
 exports.profile = function(req, res) {
-  User.load({ _id: req.user_id }, function(err, user) {
+  User.load({ _id: req.user.id }, function(err, user) {
     if (err) return res.json({ result: false, errors: err.errors });
     return res.json({ result: true, data: user });
   });
 };
-
-
-
-
-

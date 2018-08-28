@@ -3,12 +3,15 @@
 /*
  * Module dependencies.
  */
-const home      = require('../app/controllers/home');
-const users     = require('../app/controllers/users');
-const uploads   = require('../app/controllers/uploads');
-const articles  = require('../app/controllers/articles');
-const comments  = require('../app/controllers/comments');
-const likes     = require('../app/controllers/likes');
+const home          = require('../app/controllers/home');
+const users         = require('../app/controllers/users');
+const uploads       = require('../app/controllers/uploads');
+const articles      = require('../app/controllers/articles');
+const comments      = require('../app/controllers/comments');
+const likes         = require('../app/controllers/likes');
+const conversations = require('../app/controllers/conversations');
+const messages      = require('../app/controllers/messages');
+
 const auth      = require('./auth');
 const menu      = require('./menu');
 
@@ -42,9 +45,9 @@ module.exports = function (app, passport) {
   // user routes
   app.post('/user/login', pauth('local',{session: false}), users.session);
   app.post('/user/signup', users.create);
-  app.get('/user/logout', auth.access_token, users.logout);
+  app.get('/user/logout', auth.requires_login, users.logout);
   app.get('/user/activation', users.activation);
-  app.get('/user/profile', auth.access_token, users.profile);
+  app.get('/user/profile', auth.requires_login, users.profile);
 
   app.post('/pass/forgot', users.forgot_password);
   app.post('/pass/reset', users.reset_password);
@@ -66,6 +69,22 @@ module.exports = function (app, passport) {
    */
    app.post('/upload', uploads.index)
 
+
+   /**
+    * Messaging Routes
+    */
+   app.param('conversation_id', conversations.load);
+   app.route('/messages')
+      .get(auth.requires_login, conversations.list)
+      .post(auth.requires_login, conversations.create);
+
+  app.post('/message', auth.requires_login, messages.send);
+
+  app.route('/messages/:conversation_id')
+     .get(auth.requires_login, messages.list)
+     .post(auth.requires_login, messages.reply);
+
+
   /**
    * Articles Routes
    */
@@ -81,7 +100,7 @@ module.exports = function (app, passport) {
 
   /**
    * Comments Routes
-   */  
+   */
   app.param('comment_id', comments.load);
   app.route('/:category/:menu/:article_id/comments')
      .get(menuAuth, comments.list)
@@ -92,7 +111,7 @@ module.exports = function (app, passport) {
 
   /**
    * Likes Routes
-   */  
+   */
   app.param('like_id', likes.load);
   app.route('/:category/:menu/:article_id/likes')
      .get(menuAuth, likes.list)
@@ -103,6 +122,9 @@ module.exports = function (app, passport) {
      .delete(menuAuth, likeAuth, likes.destroy);
 
 
+
+
+  app.post('/test', conversations.test);
   // app.get('/:category(board)/:menu/:id',      hasMenu, articles.show);
   // app.delete('/:category(board)/:menu/:id',   hasMenu, articleAuth, articles.destroy);
 
