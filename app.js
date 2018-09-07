@@ -21,7 +21,7 @@ const passport = require('passport');
 
 const models = join(__dirname, 'app/models');
 const config = require('./config/config');
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8088;
 const app = express();
 const secret = 'yourSuperSecretPassword'
 
