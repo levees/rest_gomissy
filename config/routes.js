@@ -37,7 +37,14 @@ module.exports = function (app, passport) {
     auth.access_token(req, res, next);
   });
 
-  app.get('', home.index);
+
+  app.get('/', function(req, res, next) {
+    res.render('index', {
+      title: 'Express'
+    });
+  });
+
+  // app.get('', home.index);
   app.get('/test', home.test);
   // app.get('/test/:id/:sid:format(.json)?', home.test);
 
