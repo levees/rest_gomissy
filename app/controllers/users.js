@@ -174,7 +174,7 @@ exports.reset_password = function(req, res, next) {
 
 exports.profile = function(req, res) {
   User.load({ _id: req.user.id }, function(err, user) {
-    if (err) return res.json({ result: false, errors: err.errors });
-    return res.json({ result: true, data: user });
+    if (err) return res.json({ errors: err.errors }, 403);
+    return res.json({ data: user });
   });
 };
