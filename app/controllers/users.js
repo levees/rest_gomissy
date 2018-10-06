@@ -107,12 +107,13 @@ exports.activation = function (req, res) {
  */
 
 exports.session = function (req, res) {
+  console.log('session');
   var user = req.user;
   req.logIn(user, { session: false }, function(err) {
     if (err) {
-      return res.json({ result: false, errors: err.errors });
+      return res.status(403).json({ errors: err.errors });
     }
-    return res.json({ result: true, token: user.access_token });
+    return res.json({ token: user.access_token });
   });
 };
 
@@ -174,7 +175,7 @@ exports.reset_password = function(req, res, next) {
 
 exports.profile = function(req, res) {
   User.load({ _id: req.user.id }, function(err, user) {
-    if (err) return res.json({ errors: err.errors }, 403);
-    return res.json({ data: user });
+    if (err) return res.status(403).json({ errors: err.errors });
+    return res.json({ info: user });
   });
 };

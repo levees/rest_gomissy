@@ -92,7 +92,7 @@ module.exports = function (app, passport) {
 
   // Cors
   // app.use(cors({
-  //   origin: ['http://localhost:3000', 'https://cdnet-push.herokuapp.com'],
+  //   origin: ['http://localhost:8080', 'https://cdnet-push.herokuapp.com'],
   //   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
   //   credentials: true
   // }));

@@ -50,7 +50,7 @@ module.exports = function (app, passport) {
 
 
   // user routes
-  app.post('/user/login', pauth('local',{session: false}), users.session);
+  app.post('/user/login', pauth('local'), users.session);
   app.post('/user/signup', users.create);
   app.get('/user/logout', auth.requires_login, users.logout);
   app.get('/user/activation', users.activation);
