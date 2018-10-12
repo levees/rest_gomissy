@@ -35,3 +35,18 @@ exports.access_menu = function (req, res, next) {
   if (req.user) return next();
   return res.status(401).json({ result: false, errors: ['No permission.'] });
 };
+
+
+exports.topmenu = function (req, res, next) {
+  Menu.find({ "used_in": true }).exec(function(err, menus) {
+    if (err) return res.status(403).send({ success: false, errors: ['Invalid request.'] });
+    return res.json({ menus: menus });
+  });
+};
+
+exports.submenu = function (req, res, next) {
+  Menu.findOne({ "path": req.params.menu_path, "used_in": true }).populate("sub_menus").exec(function(err, menus) {
+    if (err) return res.status(403).send({ success: false, errors: ['Invalid request.'] });
+    return res.json({ menus: menus.sub_menus });
+  });
+};

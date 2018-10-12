@@ -48,6 +48,9 @@ module.exports = function (app, passport) {
   app.get('/test', home.test);
   // app.get('/test/:id/:sid:format(.json)?', home.test);
 
+  // menu Routes
+  app.get('/menu/top', menu.topmenu);
+  app.get('/menu/sub/:menu_path', menu.submenu);
 
   // user routes
   app.post('/user/login', pauth('local'), users.session);
