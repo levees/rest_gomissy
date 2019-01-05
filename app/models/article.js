@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 
+const _ = require('underscore');
 const mongoose = require('mongoose');
 const notify = require('../mailer');
 
@@ -14,30 +15,6 @@ const notify = require('../mailer');
 const Schema = mongoose.Schema;
 const getTags = tags => tags.join(',');
 const setTags = tags => tags.split(',');
-
-
-/**
- * Comment Schema
- */
-const CommentSchema = new Schema({
-  body: {
-    type: String,
-    default: ''
-  },
-  user: {
-    type: Schema.ObjectId,
-    ref: 'User',
-    index: true
-  },
-  ip_address: {
-    type: String
-  },
-  created_at: {
-    type: Date,
-    default: Date.now
-  }
-});
-
 
 /**
  * Like Schema
@@ -59,6 +36,42 @@ const LikeSchema = new Schema({
     type: Date,
     default: Date.now
   }
+});
+
+
+/**
+ * Comment Schema
+ */
+const CommentSchema = new Schema({
+  parent: {
+    type: Schema.ObjectId,
+    ref: 'Comment'
+  },
+  body: {
+    type: String,
+    default: ''
+  },
+  original: {
+    type: String,
+    default: null
+  },
+  likes: [LikeSchema],
+  user: {
+    type: Schema.ObjectId,
+    ref: 'User',
+    index: true
+  },
+  ip_address: {
+    type: String
+  },
+  created_at: {
+    type: Date,
+    default: Date.now
+  }
+});
+
+CommentSchema.add ({
+  replies: [CommentSchema]
 });
 
 
@@ -110,6 +123,10 @@ const ArticleSchema = new Schema({
   created_at  : {
     type : Date,
     default : Date.now
+  },
+  views : {
+    type : Number,
+    default : 0
   }
 });
 
@@ -217,6 +234,32 @@ ArticleSchema.methods = {
 
   addComment: function (comment) {
     this.comments.push(comment);
+    // if (!this.user.email) this.user.email = 'email@product.com';
+
+    // notify.comment({
+    //   article: this,
+    //   currentUser: user,
+    //   comment: comment.body
+    // });
+
+    return this.save();
+  },
+
+  /**
+   * Reply comment
+   *
+   * @param {User} user
+   * @param {Object} comment
+   * @api private
+   */
+
+  replyComment: function (comment_id, comment) {
+    const index = this.comments
+      .map(comment => comment.id)
+      .indexOf(comment_id);
+    _.extend(comment, { parent: comment_id })
+    
+    this.comments[index].replies.push(comment);
 
     // if (!this.user.email) this.user.email = 'email@product.com';
 
@@ -226,6 +269,34 @@ ArticleSchema.methods = {
     //   comment: comment.body
     // });
 
+    return this.save();
+  },
+
+  /**
+   * Like comment
+   *
+   * @param {User} user
+   * @param {Object} like
+   * @api private
+   */
+
+  likeComment: function (comment_id, like, index, parent_idx = null) {
+    console.log(comment_id, like, index, parent_idx);
+
+    if (parent_idx != null) {
+      // const index = this.comments[parent_idx]
+      //   .map(comment => comment.id)
+      //   .indexOf(comment_id);
+
+      this.comments[parent_idx].replies[index].likes.push(like);
+    }
+    else {
+      // const index = this.comments
+      //   .map(comment => comment.id)
+      //   .indexOf(comment_id);
+      
+      this.comments[index].likes.push(like);
+    }
     return this.save();
   },
 
@@ -241,11 +312,49 @@ ArticleSchema.methods = {
       .map(comment => comment.id)
       .indexOf(comment_id);
 
-    if (~index) this.comments.splice(index, 1);
-    else throw new Error('Comment not found');
+    if (~index) {
+      console.log(this.comments[index].body);
+      if (this.comments[index].replies.length > 0) {
+        this.comments[index].original = this.comments[index].body;
+        this.comments[index].body = 'Comment have been deleted.';
+      }
+      else 
+        this.comments.splice(index, 1);
+    }
+    else 
+      throw new Error('Comment not found');
     return this.save();
   },
 
+
+  /**
+   * Remove reply
+   *
+   * @param {comment_id} String
+   * @param {parent} String   
+   * @api private
+   */
+
+  removeReply: function (comment_id, parent) {
+    const index = this.comments
+      .map(comment => comment.id)
+      .indexOf(parent.toString());
+
+    if (~index) {
+      const replyIndex = this.comments[index].replies
+        .map(comment => comment.id)
+        .indexOf(comment_id);
+
+      if (~replyIndex) 
+        this.comments[index].replies.splice(replyIndex, 1);
+      else 
+        throw new Error('Reply not found');
+    }
+    else {
+      throw new Error('Comment not found');
+    }
+    return this.save();
+  },
 
   /**
    * Add Like
@@ -282,7 +391,7 @@ ArticleSchema.methods = {
       .map(like => like.id)
       .indexOf(like_id);
 
-    if (~index) this.likes[index].like = like;
+    if (~index) this.likes[index].like = like.like;
     else throw new Error('Like not found');
     return this.save();
   },
@@ -311,6 +420,23 @@ ArticleSchema.methods = {
 ArticleSchema.statics = {
 
   /**
+   * View count to Article
+   *
+   * @param {ObjectId} id
+   * @api private
+   */
+
+  viewcount: function (_id) {
+    return this.findOne({ _id })
+      .exec(function(err, doc) {
+        if (doc) {
+          doc.views += 1;
+          doc.save();
+        }
+      });
+  },  
+
+  /**
    * Find article by id
    *
    * @param {ObjectId} id
@@ -321,6 +447,7 @@ ArticleSchema.statics = {
     return this.findOne({ _id })
       .populate('user', 'username name photo')
       .populate('comments.user', 'username name photo')
+      .populate('comments.replies.user', 'username name photo')
       .populate('likes.user', 'username name photo')
       .exec();
   },
@@ -335,14 +462,15 @@ ArticleSchema.statics = {
   list: function (options) {
     const criteria = options.criteria || {};
     const page = options.page || 0;
-    const limit = options.limit || 30;
+    const limit = options.limit || 20;
     return this.find(criteria)
-      .populate('user', 'username name photo')
-      .sort({ createdAt: -1 })
+      .sort("-created_at")
       .limit(limit)
       .skip(limit * page)
+      .populate('user', 'username name photo')
       .exec();
   }
+
 };
 
 mongoose.model('Article', ArticleSchema);

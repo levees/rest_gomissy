@@ -14,7 +14,6 @@ const config = require('./config');
 exports.access_token = function(req, res, next) {
   // check header or url parameters or post parameters for token
   var token = req.body.token || req.query.token || req.headers['x-access-token'];
-
   // decode token
   if (token) {
     // verifies secret and checks exp
@@ -67,7 +66,7 @@ exports.user = {
 
 exports.article = {
   authorization: function (req, res, next) {
-    if (req.article.user != req.user.id) {
+    if (req.article.user._id != req.user.id) {
       return res.json({ result: false, errors: ['You are not authorized'] });
     }
     next();
@@ -80,7 +79,7 @@ exports.article = {
 
 exports.comment = {
   authorization: function (req, res, next) {
-    if (req.comment.user != req.user.id) {
+    if (req.comment.user._id != req.user.id) {
       return res.json({ result: false, errors: ['You are not authorized'] });
     }
     next();
@@ -93,7 +92,7 @@ exports.comment = {
 
 exports.like = {
   authorization: function (req, res, next) {
-    if (req.like.user != req.user.id) {
+    if (req.like.user._id != req.user.id) {
       return res.json({ result: false, errors: ['You are not authorized'] });
     }
     next();

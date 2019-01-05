@@ -79,7 +79,7 @@ module.exports = function (app, passport) {
   });
 
   // bodyParser should be above methodOverride
-  app.use(bodyParser.json());
+  app.use(bodyParser.json({ extended: true, limit: '10mb' }));
   app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
   app.use(methodOverride(function (req) {
     if (req.body && typeof req.body === 'object' && '_method' in req.body) {

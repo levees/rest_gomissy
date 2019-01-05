@@ -7,6 +7,7 @@
 const { wrap: async } = require('co');
 const func = require('../../config/function');
 const only = require('only');
+const _ = require('underscore');
 const assign = Object.assign;
 // const { respond, respondOrRedirect } = require('../../config/respond');
 
@@ -21,12 +22,27 @@ exports.load = function (req, res, next, id) {
 };
 
 /**
+ * Get # of likes 
+ */
+
+exports.get = function(req, res) {
+  var likes = { like: 0, dislike: 0 };
+  if (req.article.likes.length > 0) {
+    likes = _.countBy(req.article.likes, function(obj) {
+      return obj.like % 2 == 0 ? 'dislike': 'like';
+    });
+  }
+
+  res.json({ result: true, data: likes });
+}
+
+/**
  * List likes
  */
 
 exports.list = function (req, res) {
   const article = req.article;
-  res.json({ result: true, likes: article.likes });
+  res.json({ result: true, data: article.likes });
 };
 
 /**
@@ -35,13 +51,30 @@ exports.list = function (req, res) {
 
 exports.create = async(function* (req, res) {
   const article = req.article;
+  var liked = false;
+
+  liked = _.find(article.likes, function(item) {
+    console.log(item.user._id.toString(), req.user.id)
+    return item.user._id.toString() == req.user.id;
+  });
+
   var like = {
     like: req.body.like,
     user: req.user.id,
     ip_address: func.getIPAddr()
   };
-  yield article.addLike(like);
-  res.json({ result: true, likes: article.likes });
+
+  if (liked) 
+    yield article.updateLike(liked.id, like);
+  else 
+    yield article.addLike(like);
+
+  var likes = { like: 0, dislike: 0 };
+  likes = _.countBy(req.article.likes, function(obj) {
+    return obj.like % 2 == 0 ? 'dislike': 'like';
+  });
+
+  res.json({ result: true, data: likes });
 });
 
 
@@ -52,7 +85,7 @@ exports.create = async(function* (req, res) {
 exports.update = async(function* (req, res) {
   const article = req.article;
   yield article.updateLike(req.like.id, req.body.like);
-  res.json({ result: true, likes: article.likes });
+  res.json({ result: true, data: article.likes });
 });
 
 /**

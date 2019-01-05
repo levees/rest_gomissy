@@ -108,6 +108,10 @@ module.exports = function (app, passport) {
      .put(menuAuth, articleAuth, articles.update)
      .delete(menuAuth, articleAuth, articles.destroy);
 
+  app.route('/:category/:menu/:article_id/view')
+     .put(menuAuth, articles.viewcount)
+
+
   /**
    * Comments Routes
    */
@@ -117,12 +121,17 @@ module.exports = function (app, passport) {
      .post(menuAuth, comments.create);
 
   app.route('/:category/:menu/:article_id/comments/:comment_id')
+     .post(menuAuth, comments.reply)
      .delete(menuAuth, commentAuth, comments.destroy);
+
+  app.route('/:category/:menu/:article_id/comments/:comment_id/like')
+     .post(menuAuth, comments.like)
 
   /**
    * Likes Routes
    */
   app.param('like_id', likes.load);
+  app.get('/:category/:menu/:article_id/like', menuAuth, likes.get);
   app.route('/:category/:menu/:article_id/likes')
      .get(menuAuth, likes.list)
      .post(menuAuth, likes.create);

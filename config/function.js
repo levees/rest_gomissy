@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const maxmind = require('maxmind');
 const path = require('path');
+const moment = require('moment');
+const fs = require('fs');
 const geoDb = path.resolve(__dirname, '../dbs/GeoLite2-City.mmdb');
 
 const postal = mongoose.model('Postal', { postal: String, city: String, state: String, state_code: String, county: String, county_code: String, latitude: String, longitude: String, accuracy: Number });
@@ -62,8 +64,9 @@ module.exports = {
    * body with image tag from summernode data
    */
 
-  bodyWithImgs: function(htmlText, board, pathToSaveImg = 'public/uploads', baseUrl = '', append = true) {
-    var htmlWithImgUrls  = htmlText.replace(/src=\"data:([^\"]+)\"/gi,function(matches){
+  bodyWithImgs: function(htmlText, board, baseUrl = '', append = false, pathToSaveImg = 'public/uploads') {
+    console.log(htmlText);
+    htmlWithImgUrls = htmlText.replace(/src=\"data:([^\"]+)\"/gi, function(matches) {
       var splitted =  (matches).split(';');
       var contentType = splitted[0];
       var encContent = splitted[1];
@@ -72,7 +75,7 @@ module.exports = {
         return matches;
       }
       // var imgFilename = imgBase64.substr(1,8).replace(/[^\w\s]/gi, '') + Date.now() + String(Math.random() * (900000000)).replace('.',''); // Generate a unique filename
-      var imgFilename = board.toLowerCase() + moment().format('YYYYMMDD') + String(Math.random() * (900000000)).replace('.','');
+      var imgFilename = board.toLowerCase() + '_' + moment().format('YYYYMMDD') + String(Math.random() * (900000000)).replace('.','');
       var imgExt = '';
       switch(contentType.split(':')[1]) {
         case 'image/jpeg': imgExt = 'jpg'; break;

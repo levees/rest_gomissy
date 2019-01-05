@@ -107,13 +107,12 @@ exports.activation = function (req, res) {
  */
 
 exports.session = function (req, res) {
-  console.log('session');
   var user = req.user;
   req.logIn(user, { session: false }, function(err) {
     if (err) {
-      return res.status(403).json({ errors: err.errors });
+      return res.status(403).json({ result: false, errors: err.errors });
     }
-    return res.json({ token: user.access_token });
+    return res.json({ result: true, token: user.access_token, username: user.username, photo: user.photo });
   });
 };
 

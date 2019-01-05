@@ -29,7 +29,7 @@ module.exports = new LocalStrategy({
         return done(null, false, { errors: ['Incorrect username or password.'] });
       }
 
-      var access_token = user.access_token = createJWT({ id: user._id, username: user.username, level: user.level });
+      var access_token = user.access_token = createJWT({ id: user._id, username: user.username, name:user.name, level: user.level, photo: user.photo });
       User.updateOne(user, {$set: {'access_token': access_token}}).exec();
       return done(null, user);
     });
