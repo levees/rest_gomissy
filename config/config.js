@@ -11,7 +11,7 @@ const path = require('path');
  */
 
 const defaults = {
-  baseUrl: 'rest.gomissy.com',
+  baseUrl: 'api.gomissy.com',
   root: path.join(__dirname, '..'),
   secret: 'gomissy',
   db: 'mongodb://54.215.185.175/gomissy_dev',
