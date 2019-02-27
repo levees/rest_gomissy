@@ -7,6 +7,7 @@ const home          = require('../app/controllers/home');
 const users         = require('../app/controllers/users');
 const uploads       = require('../app/controllers/uploads');
 const articles      = require('../app/controllers/articles');
+const products      = require('../app/controllers/products');
 const comments      = require('../app/controllers/comments');
 const likes         = require('../app/controllers/likes');
 const conversations = require('../app/controllers/conversations');
@@ -21,6 +22,7 @@ const menu      = require('./menu');
  */
 const menuAuth = [menu.has_menu, menu.access_menu];
 const articleAuth = [auth.requires_login, auth.article.authorization];
+const productAuth  = [auth.requires_login, auth.product.authorization];
 const commentAuth = [auth.requires_login, auth.comment.authorization];
 const likeAuth = [auth.requires_login, auth.like.authorization];
 
@@ -93,6 +95,23 @@ module.exports = function (app, passport) {
   app.route('/messages/:conversation_id')
      .get(auth.requires_login, messages.list)
      .post(auth.requires_login, messages.reply);
+
+
+  /**
+   * Products Routes
+   */
+  app.param('product_id', products.load);
+  app.route('/:category[markets]/:menu')
+     .get(menuAuth, products.list)
+     .post(menuAuth, products.create);
+
+  app.route('/:category[markets]/:menu/:product_id')
+     .get(menuAuth, products.detail)
+     .put(menuAuth, productAuth, products.update)
+     .delete(menuAuth, productAuth, products.destroy);
+
+  app.route('/:category[markets]/:menu/:product_id/view')
+     .put(menuAuth, products.viewcount)
 
 
   /**

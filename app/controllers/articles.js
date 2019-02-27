@@ -66,7 +66,7 @@ exports.list = async(function* (req, res) {
   const menu = req.params.menu;
   const page = (req.query.page > 0 ? req.query.page : 1) - 1;
   const _id = req.query.item;
-  const limit = 5; //20
+  const limit = 20;
   const options = {
     criteria: { menu: req.menu.current._id },
     limit: limit,

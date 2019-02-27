@@ -19,7 +19,7 @@ exports.access_token = function(req, res, next) {
     // verifies secret and checks exp
     jwt.verify(token, config.secret, function(err, decoded) {
       if (err) {
-        return res.json({ success: false, errors: ['Failed to authenticate token.'] });    
+        return res.status(498).json({ success: false, errors: ['Failed to authenticate token.'] });    
       } else {
         // if everything is good, save to request for use in other routes
         req.user = decoded.data;
@@ -73,6 +73,18 @@ exports.article = {
   }
 };
 
+/*
+ *  Market authorization routing middleware
+ */
+
+exports.product = {
+  authorization: function (req, res, next) {
+    if (req.market.user._id != req.user.id) {
+      return res.json({ result: false, errors: ['You are not authorized'] });
+    }
+    next();
+  }
+};
 /**
  * Comment authorization routing middleware
  */
